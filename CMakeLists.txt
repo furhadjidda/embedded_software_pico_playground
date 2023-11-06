@@ -4,9 +4,14 @@ cmake_minimum_required(VERSION 3.14)
 set(PROJECT_NAME "Embedded_Software_Pico_Playground")
 set(BUILD_NUMBER "1")
 
+set(PICO_BOARD pico_w)
 # Set app name(s) and version(s)
+set(APP_4_NAME "TIMERS_DEMO")
+set(APP_4_VERSION_NUMBER "1.4.2")
+
 
 # Specify the app(s) source code
+set(APP_4_SRC_DIRECTORY "${CMAKE_SOURCE_DIR}/App-Timers")
 set(PIMORINI_ROOT "${CMAKE_SOURCE_DIR}/pimoroni-pico")
 
 # FROM 1.3.0 -- Move common source code to a separate directory
@@ -57,4 +62,5 @@ target_include_directories(FreeRTOS PUBLIC
 )
 
 # Include the apps' source code
+add_subdirectory(${APP_4_SRC_DIRECTORY})
 add_subdirectory(${PIMORINI_ROOT})
