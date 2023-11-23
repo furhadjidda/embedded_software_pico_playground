@@ -7,7 +7,6 @@
 // CXX
 #include <iostream>
 #include <string>
-#include <vector>
 #include <cstdlib>
 #include <cstdint>
 #include <cstring>
@@ -45,6 +44,7 @@ using std::stringstream;
 void led_on();
 void led_off();
 void task_led_pico(void* unused_arg);
+void task2(void* unused_arg);
 void timer_fired_callback(TimerHandle_t timer);
 
 
@@ -54,6 +54,7 @@ void timer_fired_callback(TimerHandle_t timer);
 
 // Task handles
 TaskHandle_t handle_task_pico = NULL;
+TaskHandle_t handle_task2 = NULL;
 
 // Misc
 volatile TimerHandle_t led_on_timer;
@@ -97,6 +98,17 @@ void task_led_pico(void* unused_arg) {
     while (true) {
         // NOP
     }
+}
+
+void task2(void* unused_arg){
+
+    Utils::log_debug(string("Task2 Starting !!\n"));
+
+    // Start the task loop
+    while (true) {
+        //Utils::log_debug(string("Task2 Running !!\n"));
+    }
+
 }
 
 
@@ -149,9 +161,7 @@ int main() {
     stdio_init_all();
     // observation cyw43_arch_init should be called after stdio_init_all else it does not work.
     if (cyw43_arch_init()) {
-        stringstream log_stream;
-        log_stream << "Init Failed";
-        Utils::log_debug(log_stream.str());
+        Utils::log_debug(string("Init Failed"));
         sleep_ms(2000);
     }
     // Pause to allow the USB path to initialize
@@ -163,9 +173,11 @@ int main() {
     
     // Set up two tasks
     BaseType_t status_task_pico = xTaskCreate(task_led_pico, "PICO_LED_TASK",  128, NULL, 1, &handle_task_pico);
+    BaseType_t status_task2 = xTaskCreate(task2, "TASK2",  128, NULL, 1, &handle_task2);
     
     // Start the FreeRTOS scheduler if any of the tasks are good
-    if (status_task_pico == pdPASS) {
+    if (status_task_pico == pdPASS || status_task2 == pdPASS) {
+        Utils::log_debug(string("Starting Schedular"));
         // Start the scheduler
         vTaskStartScheduler();
     } else {
