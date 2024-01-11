@@ -13,6 +13,7 @@ set(APP_4_VERSION_NUMBER "1.4.2")
 # Specify the app(s) source code
 set(APP_4_SRC_DIRECTORY "${CMAKE_SOURCE_DIR}/App-Timers")
 set(PIMORINI_ROOT "${CMAKE_SOURCE_DIR}/pimoroni-pico")
+set(MICROROS_ROOT "${CMAKE_SOURCE_DIR}/micro_ros_raspberrypi_pico_sdk")
 
 # FROM 1.3.0 -- Move common source code to a separate directory
 set(COMMON_CODE_DIRECTORY "${CMAKE_SOURCE_DIR}/Common")
@@ -64,3 +65,4 @@ target_include_directories(FreeRTOS PUBLIC
 # Include the apps' source code
 add_subdirectory(${APP_4_SRC_DIRECTORY})
 add_subdirectory(${PIMORINI_ROOT})
+add_subdirectory(${MICROROS_ROOT})
