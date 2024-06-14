@@ -1,2 +1,17 @@
 # embedded_software_pico_playground
 When i started with pico there were a few different things i wanted to learn through it and understanding how to set it up was a bit scattered and confusing at first. so I created this repo beased on some templates out there to get started with the environment , more specifically build systems and examples for me to keep working on.
+
+## Usage
+
+1. Clone the repo: `git clone https://github.com/furhadjidda/embedded_software_pico_playground.git`.
+2. Enter the repo: `cd embedded_software_pico_playground`.
+3. Install the submodules: `git submodule update --init --recursive`.
+4. Optionally, edit `CMakeLists.txt` and `/<Program>/CMakeLists.txt` to rename the project.
+5. Optionally, manually configure the build process: `cmake -S . -B build/`.
+6. Optionally, manually build the app: `cmake --build build`.
+7. Connect your device so it’s ready for file transfer.
+8. Install the app: `./deploy.sh`.
+    * Pass the app you wish to deplopy:
+        * `./deploy.sh build/App-Template/TEMPLATE.uf2`.
+        * `./deploy.sh build/App-Scheduling/SCHEDULING_DEMO.uf2`.
+    * To trigger a build, include the `--build` or `-b` flag: `./deploy.sh -b`.
