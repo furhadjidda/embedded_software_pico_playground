@@ -30,6 +30,20 @@ jobs:
         export MY_ENV_VAR=value
         # Add other environment setup commands as needed
 
+    - name: Install ARM GCC toolchain
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc-arm-none-eabi make
+
+    - name: Configure CMake
+      env:
+        PICO_SDK_PATH: ${{ github.workspace }}/pico-sdk
+        PICO_TOOLCHAIN_PATH: /usr/bin
+      run: |
+        mkdir -p build
+        cd build
+        cmake -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/pico-sdk/cmake/preload/toolchains/pico_arm_gcc.cmake ..
+
     - name: Configure CMake
       run: |
         mkdir -p build
