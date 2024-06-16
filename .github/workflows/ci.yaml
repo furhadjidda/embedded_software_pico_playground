@@ -42,7 +42,7 @@ jobs:
       run: |
         mkdir -p build
         cd build
-        cmake -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/pico-sdk/cmake/preload/toolchains/pico_arm_gcc.cmake ..
+        cmake -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/external/pico-sdk/cmake/preload/toolchains/pico_arm_gcc.cmake ..
 
     - name: Configure CMake
       run: |
