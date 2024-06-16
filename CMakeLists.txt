@@ -6,18 +6,18 @@ set(BUILD_NUMBER "1")
 
 set(PICO_BOARD pico_w)
 # Set app name(s) and version(s)
-set(APP_4_NAME "TIMERS_DEMO")
-set(APP_4_VERSION_NUMBER "1.4.2")
+set(FREERTOS_TIMER_APP "FreeRtosTimerApp")
+set(FREERTOS_TIMER_APP_VERSION_NUMBER "1.0")
 
 
 # Specify the app(s) source code
-set(APP_4_SRC_DIRECTORY "${CMAKE_SOURCE_DIR}/App-Timers")
+set(FREERTOS_TIMER_APP_SRC_DIRECTORY "${CMAKE_SOURCE_DIR}/src/freertos_timer_app")
 set(PIMORINI_ROOT "${CMAKE_SOURCE_DIR}/external/pimoroni-pico")
 set(MICROROS_ROOT "${CMAKE_SOURCE_DIR}/external/micro_ros_raspberrypi_pico_sdk")
-set(PCA9685_Core_Test "${CMAKE_SOURCE_DIR}/pca9685_motor_control")
+set(PCA9685_Core_Test "${CMAKE_SOURCE_DIR}/src/pca9685_motor_control")
 
 # FROM 1.3.0 -- Move common source code to a separate directory
-set(COMMON_CODE_DIRECTORY "${CMAKE_SOURCE_DIR}/Common")
+set(COMMON_CODE_DIRECTORY "${CMAKE_SOURCE_DIR}/src/common")
 
 # FROM 1.4.2 -- Set app-side debugging on debug builds
 # Now uses CMake generator expression to extract config type
@@ -29,7 +29,7 @@ add_compile_definitions($<$<CONFIG:Debug>:DEBUG=1>)
 set(ENV{PICO_SDK_PATH} "${CMAKE_SOURCE_DIR}/external/pico-sdk")
 
 # Set flags and directory variables
-set(FREERTOS_CFG_DIRECTORY "${CMAKE_SOURCE_DIR}/Config")
+set(FREERTOS_CFG_DIRECTORY "${CMAKE_SOURCE_DIR}/src/config")
 set(FREERTOS_SRC_DIRECTORY "${CMAKE_SOURCE_DIR}/external/FreeRTOS-Kernel")
 
 # Include the Pico SDK
@@ -64,7 +64,7 @@ target_include_directories(FreeRTOS PUBLIC
 )
 
 # Include the apps' source code
-add_subdirectory(${APP_4_SRC_DIRECTORY})
+add_subdirectory(${FREERTOS_TIMER_APP_SRC_DIRECTORY})
 add_subdirectory(${PIMORINI_ROOT})
 add_subdirectory(${MICROROS_ROOT})
 add_subdirectory(${PCA9685_Core_Test})
