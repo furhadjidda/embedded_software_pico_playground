@@ -12,8 +12,8 @@ set(APP_4_VERSION_NUMBER "1.4.2")
 
 # Specify the app(s) source code
 set(APP_4_SRC_DIRECTORY "${CMAKE_SOURCE_DIR}/App-Timers")
-set(PIMORINI_ROOT "${CMAKE_SOURCE_DIR}/pimoroni-pico")
-set(MICROROS_ROOT "${CMAKE_SOURCE_DIR}/micro_ros_raspberrypi_pico_sdk")
+set(PIMORINI_ROOT "${CMAKE_SOURCE_DIR}/external/pimoroni-pico")
+set(MICROROS_ROOT "${CMAKE_SOURCE_DIR}/external/micro_ros_raspberrypi_pico_sdk")
 set(PCA9685_Core_Test "${CMAKE_SOURCE_DIR}/pca9685_motor_control")
 
 # FROM 1.3.0 -- Move common source code to a separate directory
@@ -26,11 +26,11 @@ add_compile_definitions($<$<CONFIG:Debug>:DEBUG=1>)
 # Set env variable 'PICO_SDK_PATH' to the local Pico SDK
 # Comment out the set() if you have a global copy of the
 # SDK set and $PICO_SDK_PATH defined in your $PATH
-set(ENV{PICO_SDK_PATH} "${CMAKE_SOURCE_DIR}/pico-sdk")
+set(ENV{PICO_SDK_PATH} "${CMAKE_SOURCE_DIR}/external/pico-sdk")
 
 # Set flags and directory variables
 set(FREERTOS_CFG_DIRECTORY "${CMAKE_SOURCE_DIR}/Config")
-set(FREERTOS_SRC_DIRECTORY "${CMAKE_SOURCE_DIR}/FreeRTOS-Kernel")
+set(FREERTOS_SRC_DIRECTORY "${CMAKE_SOURCE_DIR}/external/FreeRTOS-Kernel")
 
 # Include the Pico SDK
 include(pico_sdk_import.cmake)
