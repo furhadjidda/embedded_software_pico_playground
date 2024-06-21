@@ -32,8 +32,8 @@
 #ifndef _ADAFRUIT_GPS_H
 #define _ADAFRUIT_GPS_H
 
-#include <Adafruit_PMTK.h>
-#include <NMEA_data.h>
+#include <Adafruit_PMTK.hpp>
+#include <NMEA_data.hpp>
 
 #include "hardware/i2c.h"
 #include "pico/stdlib.h"

@@ -1,6 +1,6 @@
 /**************************************************************************/
 /*!
-  @file Adafruit_PMTK.h
+  @file Adafruit_PMTK.hpp
 
   This is the Adafruit GPS library - the ultimate GPS library
   for the ultimate GPS module!
