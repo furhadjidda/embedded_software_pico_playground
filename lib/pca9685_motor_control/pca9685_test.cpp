@@ -36,9 +36,9 @@ int main()
     mObj.SetPwmFrequency(50);
     printf(">>>==\n");
     // Test each channel one by one
-    //mObj.SetLevel(0, 1); 
-    //mObj.SetLevel(1, 0); 
-    //mObj.SetLevel(2, 1);
+    mObj.SetLevel(0, 1); 
+    mObj.SetLevel(1, 0); 
+    mObj.SetLevel(2, 1);
     /*
     To control your motor with the PCA9685 and the Waveshare Pico Motor Driver, 
     you typically need to set PWM values for three channels because the motor 
