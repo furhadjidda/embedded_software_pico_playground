@@ -13,8 +13,10 @@ set(FREERTOS_TIMER_APP_VERSION_NUMBER "1.0")
 # Specify the app(s) source code
 set(FREERTOS_TIMER_APP_SRC_DIRECTORY "${CMAKE_SOURCE_DIR}/src/freertos_timer_app")
 set(PIMORINI_ROOT "${CMAKE_SOURCE_DIR}/external/pimoroni-pico")
+#set(PICO_EXTRAS "${CMAKE_SOURCE_DIR}/external/pico-extras")
 set(MICROROS_ROOT "${CMAKE_SOURCE_DIR}/external/micro_ros_raspberrypi_pico_sdk")
 set(PCA9685_Core_Test "${CMAKE_SOURCE_DIR}/src/pca9685_motor_control")
+set(GPS_LIBRARY "${CMAKE_SOURCE_DIR}/src/adafruit_gps")
 
 # FROM 1.3.0 -- Move common source code to a separate directory
 set(COMMON_CODE_DIRECTORY "${CMAKE_SOURCE_DIR}/src/common")
@@ -68,3 +70,7 @@ add_subdirectory(${FREERTOS_TIMER_APP_SRC_DIRECTORY})
 add_subdirectory(${PIMORINI_ROOT})
 add_subdirectory(${MICROROS_ROOT})
 add_subdirectory(${PCA9685_Core_Test})
+add_subdirectory(${GPS_LIBRARY})
+
+
+

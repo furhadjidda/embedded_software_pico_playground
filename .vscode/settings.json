@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "dialog.h": "c"
+    },
+    "editor.formatOnSave": true,
+    "clang-format.fallbackStyle": "Google",
+    "C_Cpp.clang_format_fallbackStyle": "Google", // or another style
+    "C_Cpp.clang_format_style": "file",
+    "editor.tabSize": 4, // Sets the editor to use 4 spaces for tabs
+    "editor.insertSpaces": true, // Ensures tabs are converted to spaces
+    "editor.detectIndentation": false // This ensures your settings are always applied, not based on file content
+}
