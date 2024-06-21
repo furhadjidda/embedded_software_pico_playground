@@ -1,36 +1,33 @@
 cmake_minimum_required(VERSION 3.14)
 
-# Set project data
+# Set project name and build number
 set(PROJECT_NAME "Embedded_Software_Pico_Playground")
 set(BUILD_NUMBER "1")
 
+# Set the Pico board to use
 set(PICO_BOARD pico_w)
-# Set app name(s) and version(s)
+
+# Set application name(s) and version(s)
 set(FREERTOS_TIMER_APP "FreeRtosTimerApp")
 set(FREERTOS_TIMER_APP_VERSION_NUMBER "1.0")
 
-
-# Specify the app(s) source code
+# Specify the app(s) source code directories
 set(FREERTOS_TIMER_APP_SRC_DIRECTORY "${CMAKE_SOURCE_DIR}/src/freertos_timer_app")
-set(PIMORINI_ROOT "${CMAKE_SOURCE_DIR}/external/pimoroni-pico")
-#set(PICO_EXTRAS "${CMAKE_SOURCE_DIR}/external/pico-extras")
+set(PIMORONI_ROOT "${CMAKE_SOURCE_DIR}/external/pimoroni-pico")
 set(MICROROS_ROOT "${CMAKE_SOURCE_DIR}/external/micro_ros_raspberrypi_pico_sdk")
-set(PCA9685_Core_Test "${CMAKE_SOURCE_DIR}/lib/pca9685_motor_control")
+set(PCA9685_CORE_TEST "${CMAKE_SOURCE_DIR}/lib/pca9685_motor_control")
 set(GPS_LIBRARY "${CMAKE_SOURCE_DIR}/lib/adafruit_gps")
 
-# FROM 1.3.0 -- Move common source code to a separate directory
+# Common source code directory
 set(COMMON_CODE_DIRECTORY "${CMAKE_SOURCE_DIR}/src/common")
 
-# FROM 1.4.2 -- Set app-side debugging on debug builds
-# Now uses CMake generator expression to extract config type
+# Set debugging on debug builds
 add_compile_definitions($<$<CONFIG:Debug>:DEBUG=1>)
 
 # Set env variable 'PICO_SDK_PATH' to the local Pico SDK
-# Comment out the set() if you have a global copy of the
-# SDK set and $PICO_SDK_PATH defined in your $PATH
 set(ENV{PICO_SDK_PATH} "${CMAKE_SOURCE_DIR}/external/pico-sdk")
 
-# Set flags and directory variables
+# Set FreeRTOS directories
 set(FREERTOS_CFG_DIRECTORY "${CMAKE_SOURCE_DIR}/src/config")
 set(FREERTOS_SRC_DIRECTORY "${CMAKE_SOURCE_DIR}/external/FreeRTOS-Kernel")
 
@@ -43,7 +40,7 @@ project(${PROJECT_NAME}
         DESCRIPTION "Embedded Software Pico Playground"
 )
 
-# Initialise the Pico SDK
+# Initialize the Pico SDK
 pico_sdk_init()
 
 # Add FreeRTOS as a library
@@ -67,10 +64,7 @@ target_include_directories(FreeRTOS PUBLIC
 
 # Include the apps' source code
 add_subdirectory(${FREERTOS_TIMER_APP_SRC_DIRECTORY})
-add_subdirectory(${PIMORINI_ROOT})
+add_subdirectory(${PIMORONI_ROOT})
 add_subdirectory(${MICROROS_ROOT})
-add_subdirectory(${PCA9685_Core_Test})
+add_subdirectory(${PCA9685_CORE_TEST})
 add_subdirectory(${GPS_LIBRARY})
-
-
-
