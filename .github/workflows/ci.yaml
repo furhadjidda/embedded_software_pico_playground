@@ -53,7 +53,7 @@ jobs:
     - name: Build
       run: |
         cd build
-        cmake --build . -j16
+        cmake --build . -j8
 
     - name: Run tests
       run: |
