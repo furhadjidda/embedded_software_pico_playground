@@ -16,7 +16,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
       with:
-        submodules: recursive  # Initialize and update submodules
+        #submodules: recursive  # Initialize and update submodules
+        fetch-depth: 1
+
+    - name: Initialize submodules
+      run: |
+        git submodule update --init --recursive --depth 1
 
     - name: Set up Python
       uses: actions/setup-python@v2
