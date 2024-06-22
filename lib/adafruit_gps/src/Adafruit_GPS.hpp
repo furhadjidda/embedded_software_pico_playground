@@ -202,19 +202,6 @@ class Adafruit_GPS {
     bool parseAntenna(char *);
     bool isEmpty(char *pStart);
 
-    // used by check() for validity tests, room for future expansion
-    const char *mSources[7] = {"II", "WI", "GP", "PG", "GN", "P", "ZZZ"};  ///< valid source ids
-#ifdef NMEA_EXTENSIONS
-    const char *mSentences_parsed[21] = {
-        "GGA", "GLL", "GSA", "RMC", "DBT", "HDM", "HDT", "MDA", "MTW", "MWV",
-        "RMB", "TOP", "TXT", "VHW", "VLW", "VPW", "VWR", "WCV", "XTE", "ZZZ"};  ///< parseable sentence ids
-    const char *mSentences_known[15] = {"APB", "DPT", "GSV", "HDG", "MWD", "ROT",
-                                        "RPM", "RSA", "VDR", "VTG", "ZDA", "ZZZ"};  ///< known, but not parseable
-#else  // make the lists short to save memory
-    const char *mSentences_parsed[6] = {"GGA", "GLL", "GSA", "RMC", "TOP", "ZZZ"};  ///< parseable sentence ids
-    const char *mSentences_known[4] = {"DBT", "HDM", "HDT", "ZZZ"};                 ///< known, but not parseable
-#endif
-
     // Make all of these times far in the past by setting them near the middle
     // of the millis() range. Timing assumes that sentences are parsed promptly.
     uint32_t mLastUpdate = 2000000000L;  ///< millis() when last full sentence successfully parsed

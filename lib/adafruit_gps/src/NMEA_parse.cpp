@@ -40,6 +40,8 @@
     @return True if successfully parsed, false if fails Check or parsing
 */
 
+#include "constants.hpp"
+
 bool Adafruit_GPS::Parse(char *nmea) {
     if (!Check(nmea)) return false;
     // passed the Check, so there's a valid source in thisSource and a valid
@@ -496,7 +498,7 @@ bool Adafruit_GPS::Check(char *nmea) {
     }
     // extract source of variable length
     char *p = nmea + 1;
-    const char *src = tokenOnList(p, mSources);
+    const char *src = tokenOnList(p, AdafruitGpsConstants::sources);
     if (src) {
         strcpy(thisSource, src);
         thisCheck += NMEA_HAS_SOURCE;
@@ -504,12 +506,12 @@ bool Adafruit_GPS::Check(char *nmea) {
         return false;
     p += strlen(src);
     // extract sentence id and Check if parsed
-    const char *snc = tokenOnList(p, mSentences_parsed);
+    const char *snc = tokenOnList(p, AdafruitGpsConstants::sentences_parsed);
     if (snc) {
         strcpy(thisSentence, snc);
         thisCheck += NMEA_HAS_SENTENCE_P + NMEA_HAS_SENTENCE;
     } else {  // Check if known
-        snc = tokenOnList(p, mSentences_known);
+        snc = tokenOnList(p, AdafruitGpsConstants::sentences_known);
         if (snc) {
             strcpy(thisSentence, snc);
             thisCheck += NMEA_HAS_SENTENCE;
