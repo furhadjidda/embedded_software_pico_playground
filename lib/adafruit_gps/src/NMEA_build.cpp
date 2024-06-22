@@ -49,7 +49,7 @@
 
     The resulting sentence may be corrupted if the input data is corrupt.
     In particular, the sentence will be truncated if any of the character
-    data is 0, e.g. if lat is not set to 'N' or 'S'.
+    data is 0, e.g. if mLat is not set to 'N' or 'S'.
 
     Some of the data in these test sentences may be arbitrary, e.g. for the
     TXT sentence which has a more complicated protocol for multiple lines
@@ -85,7 +85,7 @@ char *Adafruit_GPS::Build(char *nmea, const char *thisSource, const char *thisSe
     // reading.
 
     if (!strcmp(thisSentence, "GGA")) {  //************************************GGA
-        // GGA Global Positioning System Fix Data. Time, Position and fix related
+        // GGA Global Positioning System Fix Data. Time, Position and mFix related
         // data for a GPS receiver
         //       1         2       3 4        5 6 7  8   9  10 11 12 13  14  15
         //       |         |       | |        | | |  |   |   | |   | |   |    |
@@ -95,21 +95,22 @@ char *Adafruit_GPS::Build(char *nmea, const char *thisSource, const char *thisSe
         // 3) N or S (North or South)
         // 4) Longitude
         // 5) E or W (East or West)
-        // 6) GPS Quality Indicator, 0 - fix not available, 1 - GPS fix, 2 -
-        // Differential GPS fix 7) Number of satellites in view, 00 - 12 8)
+        // 6) GPS Quality Indicator, 0 - mFix not available, 1 - GPS mFix, 2 -
+        // Differential GPS mFix 7) Number of mSatellites in view, 00 - 12 8)
         // Horizontal Dilution of precision 9) Antenna Altitude above/below
-        // mean-sea-level (geoid) 10) Units of antenna altitude, meters 11) Geoidal
+        // mean-sea-level (geoid) 10) Units of mAntenna mAltitude, meters 11) Geoidal
         // separation, the difference between the WGS-84 earth
         //    ellipsoid and mean-sea-level (geoid), "-" means mean-sea-level below
         //    ellipsoid
         // 12) Units of geoidal separation, meters
-        // 13) Age of differential GPS data, time in seconds since last SC104
+        // 13) Age of differential GPS data, time in mSeconds since last SC104
         //    type 1 or 9 update, null field when DGPS is not used
         // 14) Differential reference station ID, 0000-1023
         // 15) Checksum
         sprintf(p, "%09.2f,%09.4f,%c,%010.4f,%c,%d,%02d,%f,%f,M,%f,M,,",
-                (double)hour * 10000L + minute * 100L + seconds + milliseconds / 1000., (double)latitude, lat,
-                (double)longitude, lon, fixquality, satellites, (double)HDOP, (double)altitude, (double)geoidheight);
+                (double)mHour * 10000L + mMinute * 100L + mSeconds + mMilliseconds / 1000., (double)mLatitude, mLat,
+                (double)mLongitude, mLon, mFixquality, mSatellites, (double)mHDOP, (double)mAltitude,
+                (double)mGeoidheight);
 
     } else if (!strcmp(thisSentence, "GLL")) {  //*****************************GLL
         // GLL Geographic Position – Latitude/Longitude
@@ -123,23 +124,23 @@ char *Adafruit_GPS::Build(char *nmea, const char *thisSource, const char *thisSe
         // 5) Time (UTC)
         // 6) Status A - Data Valid, V - Data Invalid
         // 7) Checksum
-        sprintf(p, "%09.4f,%c,%010.4f,%c,%09.2f,A", (double)latitude, lat, (double)longitude, lon,
-                (double)hour * 10000L + minute * 100L + seconds + milliseconds / 1000.);
+        sprintf(p, "%09.4f,%c,%010.4f,%c,%09.2f,A", (double)mLatitude, mLat, (double)mLongitude, mLon,
+                (double)mHour * 10000L + mMinute * 100L + mSeconds + mMilliseconds / 1000.);
 
     } else if (!strcmp(thisSentence, "GSA")) {  //*****************************GSA
-        // GSA GPS DOP and active satellites
+        // GSA GPS DOP and active mSatellites
         //       1 2 3                        14 15  16  17 18
         //       | | |                         | |   |   |   |
         //$--GSA,a,a,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x.x,x.x,x.x*hh
         // 1) Selection mode
         // 2) Mode
-        // 3) ID of 1st satellite used for fix
-        // 4) ID of 2nd satellite used for fix
+        // 3) ID of 1st satellite used for mFix
+        // 4) ID of 2nd satellite used for mFix
         // ...
-        // 14) ID of 12th satellite used for fix
-        // 15) PDOP in meters
-        // 16) HDOP in meters
-        // 17) VDOP in meters
+        // 14) ID of 12th satellite used for mFix
+        // 15) mPDOP in meters
+        // 16) mHDOP in meters
+        // 17) mVDOP in meters
         // 18) Checksum
         return NULL;
 
@@ -162,9 +163,9 @@ char *Adafruit_GPS::Build(char *nmea, const char *thisSource, const char *thisSe
         // 11) E or W
         // 12) Checksum
         sprintf(p, "%09.2f,A,%09.4f,%c,%010.4f,%c,%f,%f,%06d,%f,%c",
-                (double)hour * 10000L + minute * 100L + seconds + milliseconds / 1000., (double)latitude, lat,
-                (double)longitude, lon, (double)speed, (double)angle, day * 10000 + month * 100 + year,
-                (double)magvariation, mag);
+                (double)mHour * 10000L + mMinute * 100L + mSeconds + mMilliseconds / 1000., (double)mLatitude, mLat,
+                (double)mLongitude, mLon, (double)mSpeed, (double)mAngle, mDay * 10000 + mMonth * 100 + mYear,
+                (double)mMagvariation, mMag);
 
     } else if (!strcmp(thisSentence, "APB")) {  //*****************************APB
         // APB Autopilot Sentence "B"
@@ -175,7 +176,7 @@ char *Adafruit_GPS::Build(char *nmea, const char *thisSource, const char *thisSe
         // 1) Status
         //    V = LORAN-C Blink or SNR warning
         //    A = general warning flag or other navigation systems when a reliable
-        //    fix is not available
+        //    mFix is not available
         // 2) Status
         //    V = Loran-C Cycle Lock warning flag
         //    A = OK or not used
@@ -236,7 +237,7 @@ char *Adafruit_GPS::Build(char *nmea, const char *thisSource, const char *thisSe
         // 5) Depth, Fathoms
         // 6) F = Fathoms
         // 7) Checksum
-        double d = val[NMEA_DEPTH].latest - depthToTransducer;
+        double d = mVal[NMEA_DEPTH].latest - mDepthToTransducer;
         sprintf(p, "%f,f,%f,M,,,", d / 0.3048, d);
 
     } else if (!strcmp(thisSentence, "DPT")) {  //*****************************DPT
@@ -258,7 +259,7 @@ char *Adafruit_GPS::Build(char *nmea, const char *thisSource, const char *thisSe
         //$--GSV,x,x,x,x,x,x,x,...*hh
         // 1) total number of messages
         // 2) message number
-        // 3) satellites in view
+        // 3) mSatellites in view
         // 4) satellite number
         // 5) elevation in degrees
         // 6) azimuth in degrees to true
@@ -288,7 +289,7 @@ char *Adafruit_GPS::Build(char *nmea, const char *thisSource, const char *thisSe
         // 1) Heading Degrees, magnetic
         // 2) M = magnetic
         // 3) Checksum
-        sprintf(p, "%f,M", (double)val[NMEA_HDG].latest);
+        sprintf(p, "%f,M", (double)mVal[NMEA_HDG].latest);
 
     } else if (!strcmp(thisSentence, "HDT")) {  //*****************************HDT
         // HDT Heading – True
@@ -299,7 +300,7 @@ char *Adafruit_GPS::Build(char *nmea, const char *thisSource, const char *thisSe
         // 2) T = True
         // 3) Checksum
         // starts with $II for integrated instrumentation
-        sprintf(p, "%f,T", (double)val[NMEA_HDT].latest);
+        sprintf(p, "%f,T", (double)mVal[NMEA_HDT].latest);
 
     } else if (!strcmp(thisSentence, "MDA")) {  //*****************************MDA
         // MDA Meteorological Composite
@@ -351,9 +352,9 @@ char *Adafruit_GPS::Build(char *nmea, const char *thisSource, const char *thisSe
         // 5) Status, A = Data Valid
         // 6) Checksum
         if (ref == 'R')
-            sprintf(p, "%f,%c,%f,N,A", (double)val[NMEA_AWA].latest, ref, (double)val[NMEA_AWS].latest);
+            sprintf(p, "%f,%c,%f,N,A", (double)mVal[NMEA_AWA].latest, ref, (double)mVal[NMEA_AWS].latest);
         else
-            sprintf(p, "%f,%c,%f,N,A", (double)val[NMEA_TWA].latest, 'T', (double)val[NMEA_TWS].latest);
+            sprintf(p, "%f,%c,%f,N,A", (double)mVal[NMEA_TWA].latest, 'T', (double)mVal[NMEA_TWS].latest);
 
     } else if (!strcmp(thisSentence, "RMB")) {  //*****************************RMB
         // RMB Recommended Minimum Navigation Information
@@ -371,14 +372,14 @@ char *Adafruit_GPS::Build(char *nmea, const char *thisSource, const char *thisSe
         // 11) Bearing to destination in degrees True
         // 12) Destination closing velocity in knots
         // 13) Arrival Status, A = Arrival Circle Entered 14) Checksum
-        sprintf(p, ",,,,,,,,,,,%f,A", (double)val[NMEA_VMGWP].latest);
+        sprintf(p, ",,,,,,,,,,,%f,A", (double)mVal[NMEA_VMGWP].latest);
 
     } else if (!strcmp(thisSentence, "ROT")) {  //*****************************ROT
         // ROT Rate Of Turn
         //       1   2 3
         //       |   | |
         //$--ROT,x.x,A*hh
-        // 1) Rate Of Turn, degrees per minute, "-" means bow turns to port
+        // 1) Rate Of Turn, degrees per mMinute, "-" means bow turns to port
         // 2) Status, A means data is valid
         // 3) Checksum
         return NULL;
@@ -390,7 +391,7 @@ char *Adafruit_GPS::Build(char *nmea, const char *thisSource, const char *thisSe
         //$--RPM,a,x,x.x,x.x,A*hh
         // 1) Source; S = Shaft, E = Engine
         // 2) Engine or shaft number
-        // 3) Speed, Revolutions per minute
+        // 3) Speed, Revolutions per mMinute
         // 4) Propeller pitch, % of maximum, "-" means astern
         // 5) Status, A means data is valid
         // 6) Checksum
@@ -430,7 +431,7 @@ char *Adafruit_GPS::Build(char *nmea, const char *thisSource, const char *thisSe
         // 2) T = True
         // 3) Degrees Magnetic
         // 4) M = Magnetic
-        // 5) Knots (speed of current)
+        // 5) Knots (mSpeed of current)
         // 6) N = Knots
         // 7) Checksum
         return NULL;
@@ -445,13 +446,13 @@ char *Adafruit_GPS::Build(char *nmea, const char *thisSource, const char *thisSe
         // 2) T = True
         // 3) Degrees Magnetic
         // 4) M = Magnetic
-        // 5) Knots (speed of vessel relative to the water) [66]
+        // 5) Knots (mSpeed of vessel relative to the water) [66]
         // 6) N = Knots
-        // 7) Kilometers (speed of vessel relative to the water)
+        // 7) Kilometers (mSpeed of vessel relative to the water)
         // 8) K = Kilometres
         // 9) Checksum
-        sprintf(p, "%f,T,%f,M,%f,N,%f,K", (double)val[NMEA_HDT].latest, (double)val[NMEA_HDG].latest,
-                (double)val[NMEA_VTW].latest, (double)val[NMEA_VTW].latest * 1.829);
+        sprintf(p, "%f,T,%f,M,%f,N,%f,K", (double)mVal[NMEA_HDT].latest, (double)mVal[NMEA_HDG].latest,
+                (double)mVal[NMEA_VTW].latest, (double)mVal[NMEA_VTW].latest * 1.829);
 
     } else if (!strcmp(thisSentence, "VLW")) {  //*****************************VLW
         // VLW Distance Traveled through Water
@@ -478,7 +479,7 @@ char *Adafruit_GPS::Build(char *nmea, const char *thisSource, const char *thisSe
         // 3) Speed, "-" means downwind
         // 4) M = Meters per second
         // 5) Checksum
-        sprintf(p, "%f,N,,", (double)val[NMEA_VMG].latest);
+        sprintf(p, "%f,N,,", (double)mVal[NMEA_VMG].latest);
 
     } else if (!strcmp(thisSentence, "VTG")) {  //*****************************VTG
         // VTG Track Made Good and Ground Speed
@@ -516,7 +517,7 @@ char *Adafruit_GPS::Build(char *nmea, const char *thisSource, const char *thisSe
         //       |   | |    |
         //$--WCV,x.x,N,c--c*hh
         // 1) Velocity 2) N = knots 3) Waypoint ID 4) Checksum
-        sprintf(p, "%f,N,home", (double)val[NMEA_VMG].latest);
+        sprintf(p, "%f,N,home", (double)mVal[NMEA_VMG].latest);
 
     } else if (!strcmp(thisSentence, "XTE")) {  //*****************************XTE
         // XTE Cross-Track Error – Measured
@@ -526,7 +527,7 @@ char *Adafruit_GPS::Build(char *nmea, const char *thisSource, const char *thisSe
         // 1) Status
         //    V = LORAN-C blink or SNR warning
         //    A = general warning flag or other navigation systems when a reliable
-        //    fix is not available
+        //    mFix is not available
         // 2) Status
         //    V = Loran-C cycle lock warning flag
         //    A = OK or not used

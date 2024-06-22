@@ -1,6 +1,7 @@
 {
     "files.associations": {
-        "dialog.h": "c"
+        "dialog.h": "c",
+        "any": "cpp"
     },
     "editor.formatOnSave": true,
     "clang-format.fallbackStyle": "Google",

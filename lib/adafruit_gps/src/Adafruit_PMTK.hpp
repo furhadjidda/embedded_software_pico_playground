@@ -28,20 +28,20 @@
 /**
  Different commands to set the update rate from once a second (1 Hz) to 10 times
  a second (10Hz) Note that these only control the rate at which the position is
- echoed, to actually speed up the position fix you must also send one of the
- position fix rate commands below too. */
-#define PMTK_SET_NMEA_UPDATE_100_MILLIHERTZ "$PMTK220,10000*2F"  ///< Once every 10 seconds, 100 millihertz.
-#define PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ "$PMTK220,5000*1B"   ///< Once every 5 seconds, 200 millihertz.
+ echoed, to actually mSpeed up the position mFix you must also send one of the
+ position mFix rate commands below too. */
+#define PMTK_SET_NMEA_UPDATE_100_MILLIHERTZ "$PMTK220,10000*2F"  ///< Once every 10 mSeconds, 100 millihertz.
+#define PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ "$PMTK220,5000*1B"   ///< Once every 5 mSeconds, 200 millihertz.
 #define PMTK_SET_NMEA_UPDATE_1HZ "$PMTK220,1000*1F"              ///<  1 Hz
 #define PMTK_SET_NMEA_UPDATE_2HZ "$PMTK220,500*2B"               ///<  2 Hz
 #define PMTK_SET_NMEA_UPDATE_5HZ "$PMTK220,200*2C"               ///<  5 Hz
 #define PMTK_SET_NMEA_UPDATE_10HZ "$PMTK220,100*2F"              ///< 10 Hz
-// Position fix update rate commands.
-#define PMTK_API_SET_FIX_CTL_100_MILLIHERTZ "$PMTK300,10000,0,0,0,0*2C"  ///< Once every 10 seconds, 100 millihertz.
-#define PMTK_API_SET_FIX_CTL_200_MILLIHERTZ "$PMTK300,5000,0,0,0,0*18"   ///< Once every 5 seconds, 200 millihertz.
+// Position mFix update rate commands.
+#define PMTK_API_SET_FIX_CTL_100_MILLIHERTZ "$PMTK300,10000,0,0,0,0*2C"  ///< Once every 10 mSeconds, 100 millihertz.
+#define PMTK_API_SET_FIX_CTL_200_MILLIHERTZ "$PMTK300,5000,0,0,0,0*18"   ///< Once every 5 mSeconds, 200 millihertz.
 #define PMTK_API_SET_FIX_CTL_1HZ "$PMTK300,1000,0,0,0,0*1C"              ///< 1 Hz
 #define PMTK_API_SET_FIX_CTL_5HZ "$PMTK300,200,0,0,0,0*2F"               ///< 5 Hz
-// Can't fix position faster than 5 times a second!
+// Can't mFix position faster than 5 times a second!
 
 #define PMTK_SET_BAUD_115200 "$PMTK251,115200*1F"  ///< 115200 bps
 #define PMTK_SET_BAUD_57600 "$PMTK251,57600*2C"    ///<  57600 bps
@@ -97,8 +97,8 @@
 
 #define PMTK_Q_RELEASE "$PMTK605*31"  ///< ask for the release and version
 
-#define PGCMD_ANTENNA "$PGCMD,33,1*6C"    ///< request for updates on antenna status
-#define PGCMD_NOANTENNA "$PGCMD,33,0*6D"  ///< don't show antenna status messages
+#define PGCMD_ANTENNA "$PGCMD,33,1*6C"    ///< request for updates on mAntenna status
+#define PGCMD_NOANTENNA "$PGCMD,33,0*6D"  ///< don't show mAntenna status messages
 
 #define MAXWAITSENTENCE 10  ///< how long to wait when we're looking for a response
 

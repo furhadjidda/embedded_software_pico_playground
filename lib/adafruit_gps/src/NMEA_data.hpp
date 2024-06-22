@@ -22,7 +22,7 @@
   0 bytes / instance on an UNO. This typedef allows a switch to lower precision
   to save some storage if needed. A float carries 23 bits of fractional
   resolution, giving a resolution of at least 9 significant digits, thus 6
-  significant digits in the decimal place of an angular value like latitude, and
+  significant digits in the decimal place of an angular value like mLatitude, and
   thus a resolution on earth of at least 110 mm. That's closer than GPS will
   hit, and closer than needed for navigation, so floats can be used to save a
   little storage.
@@ -44,13 +44,13 @@ typedef NMEA_FLOAT_T nmea_float_t;  ///< the type of variables to use for floati
   Only some tags have history in order to save memory. Most of the memory
   cost is directly in the array.
 
-  192 history values taken every 20 seconds covers just over an hour.
+  192 history values taken every 20 mSeconds covers just over an mHour.
  **************************************************************************/
 typedef struct {
     int16_t *data = NULL;           ///< array of ints, oldest first
     unsigned n = 0;                 ///< number of history array elements
     uint32_t lastHistory = 0;       ///< millis() when history was last updated
-    uint16_t historyInterval = 20;  ///< seconds between history updates
+    uint16_t historyInterval = 20;  ///< mSeconds between history updates
     nmea_float_t scale = 1.0;       ///< history = (smoothed - offset) * scale
     nmea_float_t offset = 0.0;      ///< value = (float) history / scale + offset
 } nmea_history_t;
@@ -68,14 +68,14 @@ typedef struct {
 /**************************************************************************/
 typedef enum {
     NMEA_SIMPLE_FLOAT = 0,        ///< A simple floating point number
-    NMEA_COMPASS_ANGLE = 1,       ///< A compass style angle from 0 to 360 degrees
-    NMEA_BOAT_ANGLE = 2,          ///< An angle relative to the boat orientation
+    NMEA_COMPASS_ANGLE = 1,       ///< A compass style mAngle from 0 to 360 degrees
+    NMEA_BOAT_ANGLE = 2,          ///< An mAngle relative to the boat orientation
                                   ///< from -180 (port) to 180 degrees
-    NMEA_COMPASS_ANGLE_SIN = 11,  ///< A compass style angle from 0 to 360 degrees, with sin and cos
+    NMEA_COMPASS_ANGLE_SIN = 11,  ///< A compass style mAngle from 0 to 360 degrees, with sin and cos
                                   ///< elements stored for averaging, etc.
-    NMEA_BOAT_ANGLE_SIN = 12,     ///< An angle relative to the boat orientation from -180 (port) to 180
+    NMEA_BOAT_ANGLE_SIN = 12,     ///< An mAngle relative to the boat orientation from -180 (port) to 180
                                   ///< degrees, with sin and cos elements stored for averaging, etc.
-    NMEA_DDMM = 20,               ///< A latitude or longitude angle stored in DDMM.mmmm format
+    NMEA_DDMM = 20,               ///< A mLatitude or mLongitude mAngle stored in DDMM.mmmm format
                                   ///< like it comes in from the GPS
     NMEA_HHMMSS = 30              ///< A time stored in HHMMSS format like it comes in from the GPS
 } nmea_value_type_t;
@@ -91,7 +91,7 @@ typedef enum {
 typedef struct {
     nmea_float_t latest = 0.0;                   ///< the most recently obtained value
     nmea_float_t smoothed = 0.0;                 ///< smoothed value based on weight of dt/response
-    uint32_t lastUpdate = 0;                     ///< millis() when latest was last set
+    uint32_t mLastUpdate = 0;                    ///< millis() when latest was last set
     uint16_t response = 1000;                    ///< time constant in millis for smoothing
     nmea_value_type_t type = NMEA_SIMPLE_FLOAT;  ///< type of float data value represented
     byte ockam = 0;                              ///< the corresponding Ockam Instruments tag number, 0-128
@@ -125,29 +125,29 @@ typedef enum {
     NMEA_XTE,                ///< Cross track error for the current segment to the waypoint,
                              ///< Nautical Miles -ve to the left
     NMEA_DISTWP,             ///< Distance to the waypoint in nautical miles
-    NMEA_AWA,                ///< apparent wind angle relative to the boat -180 to 180 degrees
-    NMEA_AWA_SIN,            ///< sine of apparent wind angle relative to the boat
-    NMEA_AWA_COS,            ///< cosine of apparent wind angle relative to the boat
-    NMEA_AWS,                ///< apparent wind speed, will be coerced to knots
-    NMEA_TWA,                ///< true wind angle relative to the boat -180 to 180 degrees
-    NMEA_TWA_SIN,            ///< sine of true wind angle relative to the boat
-    NMEA_TWA_COS,            ///< cosine of true wind angle relative to the boat
+    NMEA_AWA,                ///< apparent wind mAngle relative to the boat -180 to 180 degrees
+    NMEA_AWA_SIN,            ///< sine of apparent wind mAngle relative to the boat
+    NMEA_AWA_COS,            ///< cosine of apparent wind mAngle relative to the boat
+    NMEA_AWS,                ///< apparent wind mSpeed, will be coerced to knots
+    NMEA_TWA,                ///< true wind mAngle relative to the boat -180 to 180 degrees
+    NMEA_TWA_SIN,            ///< sine of true wind mAngle relative to the boat
+    NMEA_TWA_COS,            ///< cosine of true wind mAngle relative to the boat
     NMEA_TWD,                ///< true wind compass direction, magnetic 0 to 360 degrees magnetic
     NMEA_TWD_SIN,            ///< sine of true wind compass direction, magnetic
     NMEA_TWD_COS,            ///< cosine of true wind compass direction, magnetic
-    NMEA_TWS,                ///< true wind speed in knots TWS
+    NMEA_TWS,                ///< true wind mSpeed in knots TWS
     NMEA_VMG,                ///< velocity made good relative to the wind -ve means downwind,
                              ///< knots
     NMEA_VMGWP,              ///< velocity made good relative to the waypoint, knots
-    NMEA_HEEL,               ///< boat heel angle, -180 to 180 degrees to starboard
-    NMEA_PITCH,              ///< boat pitch angle, -180 to 180 degrees bow up
+    NMEA_HEEL,               ///< boat heel mAngle, -180 to 180 degrees to starboard
+    NMEA_PITCH,              ///< boat pitch mAngle, -180 to 180 degrees bow up
     NMEA_HDG,                ///< magnetic heading, 0 to 360 degrees magnetic
     NMEA_HDG_SIN,            ///< sine of magnetic heading
     NMEA_HDG_COS,            ///< cosine of magnetic heading
     NMEA_HDT,                ///< true heading, 0 to 360 degrees true
     NMEA_HDT_SIN,            ///< sine of true heading
     NMEA_HDT_COS,            ///< cosine of true heading
-    NMEA_VTW,                ///< Boat speed through the water in knots
+    NMEA_VTW,                ///< Boat mSpeed through the water in knots
     NMEA_LOG,                ///< Distance logged through the water in nautical miles
     NMEA_LOGR,               ///< Distance logged through the water in nautical miles since
                              ///< reset
@@ -165,7 +165,7 @@ typedef enum {
     NMEA_TEMPERATURE_AIR,    ///< outside temperature in C
     NMEA_TEMPERATURE_WATER,  ///< sea water temperature in C
     NMEA_HUMIDITY,           ///< outside relative humidity in %
-    NMEA_BAROMETER,          ///< barometric pressure in Pa absolute -- not altitude
+    NMEA_BAROMETER,          ///< barometric pressure in Pa absolute -- not mAltitude
                              ///< corrected
     NMEA_USR_00,             ///< spaces for a user sketch to inject its own data
     NMEA_USR_01,             ///< spaces for a user sketch to inject its own data

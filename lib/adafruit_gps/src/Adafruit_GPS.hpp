@@ -116,83 +116,86 @@ class Adafruit_GPS {
     char lastSentence[NMEA_MAX_SENTENCE_ID] = {0};  ///< the next three letters of the most recent successfully parsed
                                                     ///< sentence, e.g. GLL, RMC
 
-    uint8_t hour = 0;           ///< GMT hours
-    uint8_t minute = 0;         ///< GMT minutes
-    uint8_t seconds = 0;        ///< GMT seconds
-    uint16_t milliseconds = 0;  ///< GMT milliseconds
-    uint8_t year = 0;           ///< GMT year
-    uint8_t month = 0;          ///< GMT month
-    uint8_t day = 0;            ///< GMT day
+    // ========================== Data ====================================================
+    // TODO: Cluster  them for simplicity and readability
+    // For example cluster into coordinates , time and date , LOCUS data
+    uint8_t mHour = 0;           ///< GMT hours
+    uint8_t mMinute = 0;         ///< GMT minutes
+    uint8_t mSeconds = 0;        ///< GMT mSeconds
+    uint16_t mMilliseconds = 0;  ///< GMT mMilliseconds
+    uint8_t mYear = 0;           ///< GMT mYear
+    uint8_t mMonth = 0;          ///< GMT mMonth
+    uint8_t mDay = 0;            ///< GMT mDay
 
-    nmea_float_t latitude = 0.0;   ///< Floating point latitude value in degrees/minutes
-                                   ///< as received from the GPS (DDMM.MMMM)
-    nmea_float_t longitude = 0.0;  ///< Floating point longitude value in degrees/minutes
-                                   ///< as received from the GPS (DDDMM.MMMM)
+    nmea_float_t mLatitude = 0.0;   ///< Floating point mLatitude value in degrees/minutes
+                                    ///< as received from the GPS (DDMM.MMMM)
+    nmea_float_t mLongitude = 0.0;  ///< Floating point mLongitude value in degrees/minutes
+                                    ///< as received from the GPS (DDDMM.MMMM)
 
-    /** Fixed point latitude and longitude value with degrees stored in units of
+    /** Fixed point mLatitude and mLongitude value with degrees stored in units of
       1/10000000 of a degree. See pull #13 for more details:
       https://github.com/adafruit/Adafruit-GPS-Library/pull/13 */
-    int32_t latitude_fixed;   ///< Fixed point latitude in decimal degrees.
-                              ///< Divide by 10000000.0 to get a double.
-    int32_t longitude_fixed;  ///< Fixed point longitude in decimal degrees
-                              ///< Divide by 10000000.0 to get a double.
+    int32_t mLatitude_fixed;   ///< Fixed point mLatitude in decimal degrees.
+                               ///< Divide by 10000000.0 to get a double.
+    int32_t mLongitude_fixed;  ///< Fixed point mLongitude in decimal degrees
+                               ///< Divide by 10000000.0 to get a double.
 
-    nmea_float_t latitudeDegrees = 0.0;   ///< Latitude in decimal degrees
-    nmea_float_t longitudeDegrees = 0.0;  ///< Longitude in decimal degrees
-    nmea_float_t geoidheight = 0.0;       ///< Diff between geoid height and WGS84 height
-    nmea_float_t altitude = 0.0;          ///< Altitude in meters above MSL
-    nmea_float_t speed = 0.0;             ///< Current speed over ground in knots
-    nmea_float_t angle = 0.0;             ///< Course in degrees from true north
-    nmea_float_t magvariation = 0.0;      ///< Magnetic variation in degrees (vs. true north)
-    nmea_float_t HDOP = 0.0;              ///< Horizontal Dilution of Precision - relative
-                                          ///< accuracy of horizontal position
-    nmea_float_t VDOP = 0.0;              ///< Vertical Dilution of Precision - relative
-                                          ///< accuracy of vertical position
-    nmea_float_t PDOP = 0.0;              ///< Position Dilution of Precision - Complex maths derives
-                                          ///< a simple, single number for each kind of DOP
-    char lat = 'X';                       ///< N/S
-    char lon = 'X';                       ///< E/W
-    char mag = 'X';                       ///< Magnetic variation direction
-    bool fix = false;                     ///< Have a fix?
-    uint8_t fixquality = 0;               ///< Fix quality (0, 1, 2 = Invalid, GPS, DGPS)
-    uint8_t fixquality_3d = 0;            ///< 3D fix quality (1, 3, 3 = Nofix, 2D fix, 3D fix)
-    uint8_t satellites = 0;               ///< Number of satellites in use
-    uint8_t antenna = 0;                  ///< Antenna that is used (from PGTOP)
+    nmea_float_t mLatitudeDegrees = 0.0;   ///< Latitude in decimal degrees
+    nmea_float_t mLongitudeDegrees = 0.0;  ///< Longitude in decimal degrees
+    nmea_float_t mGeoidheight = 0.0;       ///< Diff between geoid height and WGS84 height
+    nmea_float_t mAltitude = 0.0;          ///< Altitude in meters above MSL
+    nmea_float_t mSpeed = 0.0;             ///< Current mSpeed over ground in knots
+    nmea_float_t mAngle = 0.0;             ///< Course in degrees from true north
+    nmea_float_t mMagvariation = 0.0;      ///< Magnetic variation in degrees (vs. true north)
+    nmea_float_t mHDOP = 0.0;              ///< Horizontal Dilution of Precision - relative
+                                           ///< accuracy of horizontal position
+    nmea_float_t mVDOP = 0.0;              ///< Vertical Dilution of Precision - relative
+                                           ///< accuracy of vertical position
+    nmea_float_t mPDOP = 0.0;              ///< Position Dilution of Precision - Complex maths derives
+                                           ///< a simple, single number for each kind of DOP
+    char mLat = 'X';                       ///< N/S
+    char mLon = 'X';                       ///< E/W
+    char mMag = 'X';                       ///< Magnetic variation direction
+    bool mFix = false;                     ///< Have a fix?
+    uint8_t mFixquality = 0;               ///< Fix quality (0, 1, 2 = Invalid, GPS, DGPS)
+    uint8_t mFixquality_3d = 0;            ///< 3D mFix quality (1, 3, 3 = Nofix, 2D mFix, 3D mFix)
+    uint8_t mSatellites = 0;               ///< Number of mSatellites in use
+    uint8_t mAntenna = 0;                  ///< Antenna that is used (from PGTOP)
 
-    uint16_t LOCUS_serial = 0;   ///< Log serial number
-    uint16_t LOCUS_records = 0;  ///< Log number of data record
-    uint8_t LOCUS_type = 0;      ///< Log type, 0: Overlap, 1: FullStop
-    uint8_t LOCUS_mode = 0;      ///< Logging mode, 0x08 interval logger
-    uint8_t LOCUS_config = 0;    ///< Contents of configuration
-    uint8_t LOCUS_interval = 0;  ///< Interval setting
-    uint8_t LOCUS_distance = 0;  ///< Distance setting
-    uint8_t LOCUS_speed = 0;     ///< Speed setting
-    uint8_t LOCUS_status = 0;    ///< 0: Logging, 1: Stop logging
-    uint8_t LOCUS_percent = 0;   ///< Log life used percentage
+    uint16_t mLOCUS_serial = 0;   ///< Log serial number
+    uint16_t mLOCUS_records = 0;  ///< Log number of data record
+    uint8_t mLOCUS_type = 0;      ///< Log type, 0: Overlap, 1: FullStop
+    uint8_t mLOCUS_mode = 0;      ///< Logging mode, 0x08 interval logger
+    uint8_t mLOCUS_config = 0;    ///< Contents of configuration
+    uint8_t mLOCUS_interval = 0;  ///< Interval setting
+    uint8_t mLOCUS_distance = 0;  ///< Distance setting
+    uint8_t mLOCUS_speed = 0;     ///< Speed setting
+    uint8_t mLOCUS_status = 0;    ///< 0: Logging, 1: Stop logging
+    uint8_t mLOCUS_percent = 0;   ///< Log life used percentage
 
 #ifdef NMEA_EXTENSIONS
     // NMEA additional public variables
-    nmea_datavalue_t val[NMEA_MAX_INDEX];  ///< an array of data value structs, val[0] = most
-                                           ///< recent HDOP so that ockam indexing works
-    nmea_float_t depthToKeel = 2.4;        ///< depth from surface to bottom of keel in metres
-    nmea_float_t depthToTransducer = 0.0;  ///< depth of transducer below the surface in metres
+    nmea_datavalue_t mVal[NMEA_MAX_INDEX];  ///< an array of data value structs, mVal[0] = most
+                                            ///< recent mHDOP so that ockam indexing works
+    nmea_float_t mDepthToKeel = 2.4;        ///< depth from surface to bottom of keel in metres
+    nmea_float_t mDepthToTransducer = 0.0;  ///< depth of transducer below the surface in metres
 
-    char toID[NMEA_MAX_WP_ID] = {0};    ///< id of waypoint going to on this segment of the route
-    char fromID[NMEA_MAX_WP_ID] = {0};  ///< id of waypoint coming from on this segment of the route
+    char mToID[NMEA_MAX_WP_ID] = {0};    ///< id of waypoint going to on this segment of the route
+    char mFromID[NMEA_MAX_WP_ID] = {0};  ///< id of waypoint coming from on this segment of the route
 
-    char txtTXT[63] = {0};  ///< text content from most recent TXT sentence
-    int txtTot = 0;         ///< total TXT sentences in group
-    int txtID = 0;          ///< id of the text message
-    int txtN = 0;           ///< the TXT sentence number
-#endif                      // NMEA_EXTENSIONS
+    char mTxtTXT[63] = {0};  ///< text content from most recent TXT sentence
+    int mTxtTot = 0;         ///< total TXT sentences in group
+    int mTxtID = 0;          ///< id of the text message
+    int mTxtNumber = 0;      ///< the TXT sentence number
+#endif                       // NMEA_EXTENSIONS
 
    private:
     // NMEA_data.cpp
     void data_init();
     // NMEA_parse.cpp
     const char *tokenOnList(char *token, const char **list);
-    bool parseCoord(char *p, nmea_float_t *angleDegrees = NULL, nmea_float_t *angle = NULL, int32_t *angle_fixed = NULL,
-                    char *dir = NULL);
+    bool parseCoord(char *p, nmea_float_t *angleDegrees = NULL, nmea_float_t *mAngle = NULL,
+                    int32_t *angle_fixed = NULL, char *dir = NULL);
     char *parseStr(char *buff, char *p, int n);
     bool parseTime(char *);
     bool parseFix(char *);
@@ -200,30 +203,30 @@ class Adafruit_GPS {
     bool isEmpty(char *pStart);
 
     // used by check() for validity tests, room for future expansion
-    const char *sources[7] = {"II", "WI", "GP", "PG", "GN", "P", "ZZZ"};  ///< valid source ids
+    const char *mSources[7] = {"II", "WI", "GP", "PG", "GN", "P", "ZZZ"};  ///< valid source ids
 #ifdef NMEA_EXTENSIONS
-    const char *sentences_parsed[21] = {
+    const char *mSentences_parsed[21] = {
         "GGA", "GLL", "GSA", "RMC", "DBT", "HDM", "HDT", "MDA", "MTW", "MWV",
         "RMB", "TOP", "TXT", "VHW", "VLW", "VPW", "VWR", "WCV", "XTE", "ZZZ"};  ///< parseable sentence ids
-    const char *sentences_known[15] = {"APB", "DPT", "GSV", "HDG", "MWD", "ROT",
-                                       "RPM", "RSA", "VDR", "VTG", "ZDA", "ZZZ"};  ///< known, but not parseable
+    const char *mSentences_known[15] = {"APB", "DPT", "GSV", "HDG", "MWD", "ROT",
+                                        "RPM", "RSA", "VDR", "VTG", "ZDA", "ZZZ"};  ///< known, but not parseable
 #else  // make the lists short to save memory
-    const char *sentences_parsed[6] = {"GGA", "GLL", "GSA", "RMC", "TOP", "ZZZ"};  ///< parseable sentence ids
-    const char *sentences_known[4] = {"DBT", "HDM", "HDT", "ZZZ"};                 ///< known, but not parseable
+    const char *mSentences_parsed[6] = {"GGA", "GLL", "GSA", "RMC", "TOP", "ZZZ"};  ///< parseable sentence ids
+    const char *mSentences_known[4] = {"DBT", "HDM", "HDT", "ZZZ"};                 ///< known, but not parseable
 #endif
 
     // Make all of these times far in the past by setting them near the middle
     // of the millis() range. Timing assumes that sentences are parsed promptly.
-    uint32_t lastUpdate = 2000000000L;  ///< millis() when last full sentence successfully parsed
-    uint32_t lastFix = 2000000000L;     ///< millis() when last fix received
-    uint32_t lastTime = 2000000000L;    ///< millis() when last time received
-    uint32_t lastDate = 2000000000L;    ///< millis() when last date received
-    uint32_t recvdTime = 2000000000L;   ///< millis() when last full sentence received
-    uint32_t sentTime = 2000000000L;    ///< millis() when first character of last
-                                        ///< full sentence received
-    bool paused = false;
+    uint32_t mLastUpdate = 2000000000L;  ///< millis() when last full sentence successfully parsed
+    uint32_t mLastFix = 2000000000L;     ///< millis() when last mFix received
+    uint32_t mLastTime = 2000000000L;    ///< millis() when last time received
+    uint32_t mLastDate = 2000000000L;    ///< millis() when last date received
+    uint32_t mRecvdTime = 2000000000L;   ///< millis() when last full sentence received
+    uint32_t mSentTime = 2000000000L;    ///< millis() when first character of last
+                                         ///< full sentence received
+    bool mPaused = false;
 
-    bool noComms = false;
+    bool mNoComms = false;
 
     i2c_inst_t *mI2c{nullptr};
     uint8_t mI2cAddress = 0x00;

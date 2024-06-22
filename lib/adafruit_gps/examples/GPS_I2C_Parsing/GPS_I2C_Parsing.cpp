@@ -21,8 +21,8 @@ uint32_t timer = millis();
 
 void setup() {
     GPS.Init(0x10);  // The I2C address to use is 0x10
-    // uncomment this line to turn on RMC (recommended minimum) and GGA (fix
-    // data) including altitude
+    // uncomment this line to turn on RMC (recommended minimum) and GGA (mFix
+    // data) including mAltitude
     GPS.SendCommand(reinterpret_cast<const uint8_t*>(PMTK_SET_NMEA_OUTPUT_RMCGGA), strlen(PMTK_SET_NMEA_OUTPUT_RMCGGA));
     // uncomment this line to turn on only the "minimum recommended" data
     // GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);
@@ -34,7 +34,7 @@ void setup() {
     // For the parsing code to work nicely and have time to sort thru the data,
     // and print it out we don't suggest using anything higher than 1 Hz
 
-    // Request updates on antenna status, comment out to keep quiet
+    // Request updates on mAntenna status, comment out to keep quiet
     GPS.SendCommand(reinterpret_cast<const uint8_t*>(PGCMD_ANTENNA), strlen(PGCMD_ANTENNA));
 
     sleep_ms(1000);
@@ -67,18 +67,18 @@ void loop()  // run over and over again
         }
     }
 
-    // approximately every 2 seconds or so, print out the current stats
+    // approximately every 2 mSeconds or so, print out the current stats
     if (millis() - timer > 2000) {
         timer = millis();  // reset the timer
-        printf("\nTime: %02d:%02d:%02d.%03d\n", GPS.hour, GPS.minute, GPS.seconds, GPS.milliseconds);
-        printf("Date: %02d/%02d/20%d\n", GPS.day, GPS.month, GPS.year);
-        printf("Fix: %d quality: %d\n", (int)GPS.fix, (int)GPS.fixquality);
-        if (GPS.fix) {
-            printf("Location: %.4f %c, %.4f %c\n", GPS.latitude, GPS.lat, GPS.longitude, GPS.lon);
-            printf("Speed (knots): %f\n", GPS.speed);
-            printf("Angle: %f\n", GPS.angle);
-            printf("Altitude: %f\n", GPS.altitude);
-            printf("Satellites: %d\n", (int)GPS.satellites);
+        printf("\nTime: %02d:%02d:%02d.%03d\n", GPS.mHour, GPS.mMinute, GPS.mSeconds, GPS.mMilliseconds);
+        printf("Date: %02d/%02d/20%d\n", GPS.mDay, GPS.mMonth, GPS.mYear);
+        printf("Fix: %d quality: %d\n", (int)GPS.mFix, (int)GPS.mFixquality);
+        if (GPS.mFix) {
+            printf("Location: %.4f %c, %.4f %c\n", GPS.mLatitude, GPS.mLat, GPS.mLongitude, GPS.mLon);
+            printf("Speed (knots): %f\n", GPS.mSpeed);
+            printf("Angle: %f\n", GPS.mAngle);
+            printf("Altitude: %f\n", GPS.mAltitude);
+            printf("Satellites: %d\n", (int)GPS.mSatellites);
         }
     }
 }

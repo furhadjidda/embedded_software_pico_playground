@@ -46,50 +46,51 @@
 void Adafruit_GPS::NewDataValue(nmea_index_t idx, nmea_float_t v) {
 #ifdef NMEA_EXTENSIONS
     //  Serial.println();Serial.print(idx);Serial.print(", "); Serial.println(v);
-    val[idx].latest = v;  // update the value
+    mVal[idx].latest = v;  // update the value
 
     // update the smoothed verion
-    if (isCompoundAngle(idx)) {  // angle with sin/cos component recording
+    if (isCompoundAngle(idx)) {  // mAngle with sin/cos component recording
         NewDataValue((nmea_index_t)(idx + 1), sin(v / (nmea_float_t)RAD_TO_DEG));
         NewDataValue((nmea_index_t)(idx + 2), cos(v / (nmea_float_t)RAD_TO_DEG));
     }
     // weighting factor for smoothing depends on delta t / tau
-    nmea_float_t w = min((nmea_float_t)1.0, (nmea_float_t)(millis() - val[idx].lastUpdate) / val[idx].response);
+    nmea_float_t w = min((nmea_float_t)1.0, (nmea_float_t)(millis() - mVal[idx].mLastUpdate) / mVal[idx].response);
     // default smoothing
-    val[idx].smoothed = (1.0f - w) * val[idx].smoothed + w * v;
-    // special smoothing for some angle types
-    if (val[idx].type == NMEA_COMPASS_ANGLE_SIN)
-        val[idx].smoothed = compassAngle(val[idx + 1].smoothed, val[idx + 2].smoothed);
-    if (val[idx].type == NMEA_BOAT_ANGLE_SIN)
-        val[idx].smoothed = boatAngle(val[idx + 1].smoothed, val[idx + 2].smoothed);
+    mVal[idx].smoothed = (1.0f - w) * mVal[idx].smoothed + w * v;
+    // special smoothing for some mAngle types
+    if (mVal[idx].type == NMEA_COMPASS_ANGLE_SIN)
+        mVal[idx].smoothed = compassAngle(mVal[idx + 1].smoothed, mVal[idx + 2].smoothed);
+    if (mVal[idx].type == NMEA_BOAT_ANGLE_SIN)
+        mVal[idx].smoothed = boatAngle(mVal[idx + 1].smoothed, mVal[idx + 2].smoothed);
     // some types just don't make sense to smooth -- use latest
-    if (val[idx].type == NMEA_BOAT_ANGLE) val[idx].smoothed = val[idx].latest;
-    if (val[idx].type == NMEA_COMPASS_ANGLE) val[idx].smoothed = val[idx].latest;
-    if (val[idx].type == NMEA_DDMM) val[idx].smoothed = val[idx].latest;
-    if (val[idx].type == NMEA_HHMMSS) val[idx].smoothed = val[idx].latest;
+    if (mVal[idx].type == NMEA_BOAT_ANGLE) mVal[idx].smoothed = mVal[idx].latest;
+    if (mVal[idx].type == NMEA_COMPASS_ANGLE) mVal[idx].smoothed = mVal[idx].latest;
+    if (mVal[idx].type == NMEA_DDMM) mVal[idx].smoothed = mVal[idx].latest;
+    if (mVal[idx].type == NMEA_HHMMSS) mVal[idx].smoothed = mVal[idx].latest;
 
-    val[idx].lastUpdate = millis();  // take a time stamp
-    if (val[idx].hist) {             // there's a history struct for this tag
-        unsigned long seconds = (millis() - val[idx].hist->lastHistory) / 1000;
+    mVal[idx].mLastUpdate = millis();  // take a time stamp
+    if (mVal[idx].hist) {              // there's a history struct for this tag
+        unsigned long mSeconds = (millis() - mVal[idx].hist->lastHistory) / 1000;
         // do an update if the time has come, or if this is the first time through
-        if (seconds >= val[idx].hist->historyInterval || val[idx].hist->lastHistory == 0) {
+        if (mSeconds >= mVal[idx].hist->historyInterval || mVal[idx].hist->lastHistory == 0) {
             // move the old history back in time by one step
-            for (unsigned i = 0; i < (val[idx].hist->n - 1); i++) val[idx].hist->data[i] = val[idx].hist->data[i + 1];
+            for (unsigned i = 0; i < (mVal[idx].hist->n - 1); i++)
+                mVal[idx].hist->data[i] = mVal[idx].hist->data[i + 1];
 
             // Create the new entry, scaling and offsetting the value to fit into an
             // integer, and based on the smoothed value.
-            val[idx].hist->data[val[idx].hist->n - 1] =
-                val[idx].hist->scale * (val[idx].smoothed - val[idx].hist->offset);
-            val[idx].hist->lastHistory = millis();
+            mVal[idx].hist->data[mVal[idx].hist->n - 1] =
+                mVal[idx].hist->scale * (mVal[idx].smoothed - mVal[idx].hist->offset);
+            mVal[idx].hist->lastHistory = millis();
         }
     }
 #endif  // NMEA_EXTENSIONS
 }
 
 /*!
-    @brief    Initialize the object. Build a val[] matrix of data values for
+    @brief    Initialize the object. Build a mVal[] matrix of data values for
     all of the enumerated values, including the extra values for the compound
-    angle types. The initializer shold probably leave it up to the user
+    mAngle types. The initializer shold probably leave it up to the user
     sketch to decide which data values should carry the extra memory burden
     of history.
     @return   none
@@ -112,18 +113,18 @@ void Adafruit_GPS::data_init() {
     static char TrueAngleunit[] = "Deg True";
     static char MagAngleunit[] = "Deg Mag";
 
-    static char HDOPlabel[] = "HDOP";
+    static char HDOPlabel[] = "mHDOP";
     initDataValue(NMEA_HDOP, HDOPlabel);
 
     static char LATlabel[] = "Lat";
     static char LATfmt[] = "%9.4f";
     static char LATunit[] = "DDD.dddd";
     initDataValue(NMEA_LAT, LATlabel, LATfmt, LATunit, 0,
-                  NMEA_BOAT_ANGLE);  // angle from -180 to 180, or actually -90 to 90 for lat
+                  NMEA_BOAT_ANGLE);  // mAngle from -180 to 180, or actually -90 to 90 for mLat
 
     static char LONlabel[] = "Lon";
     initDataValue(NMEA_LON, LONlabel, LATfmt, LATunit, 0,
-                  NMEA_BOAT_ANGLE);  // angle from -180 to 180
+                  NMEA_BOAT_ANGLE);  // mAngle from -180 to 180
 
     static char LATWPlabel[] = "WP Lat";
     initDataValue(NMEA_LATWP, LATWPlabel, LATfmt, LATunit, 0, NMEA_BOAT_ANGLE);
@@ -137,11 +138,11 @@ void Adafruit_GPS::data_init() {
     static char COGlabel[] = "COG";
     // types with sin/cos need two extra spots in the values matrix!
     initDataValue(NMEA_COG, COGlabel, Anglefmt, TrueAngleunit, 0,
-                  NMEA_COMPASS_ANGLE_SIN);  // type: 0-360 angle with sin/cos 11
+                  NMEA_COMPASS_ANGLE_SIN);  // type: 0-360 mAngle with sin/cos 11
 
     static char COGWPlabel[] = "WP COG";
     initDataValue(NMEA_COGWP, COGWPlabel, Anglefmt, TrueAngleunit, 0,
-                  NMEA_COMPASS_ANGLE);  // type: angle 0-360 1
+                  NMEA_COMPASS_ANGLE);  // type: mAngle 0-360 1
 
     static char XTElabel[] = "XTE";
     static char XTEfmt[] = "%6.2f";
@@ -153,18 +154,18 @@ void Adafruit_GPS::data_init() {
 
     static char AWAlabel[] = "AWA";
     initDataValue(NMEA_AWA, AWAlabel, Anglefmt, BoatAngleunit, 0,
-                  NMEA_BOAT_ANGLE_SIN);  // type: +-180 angle with sin/cos 12
+                  NMEA_BOAT_ANGLE_SIN);  // type: +-180 mAngle with sin/cos 12
 
     static char AWSlabel[] = "AWS";
     initDataValue(NMEA_AWS, AWSlabel, WindSpeedfmt, Speedunit);
 
     static char TWAlabel[] = "TWA";
     initDataValue(NMEA_TWA, TWAlabel, Anglefmt, BoatAngleunit, 0,
-                  NMEA_BOAT_ANGLE_SIN);  // type: +-180 angle with sin/cos 12
+                  NMEA_BOAT_ANGLE_SIN);  // type: +-180 mAngle with sin/cos 12
 
     static char TWDlabel[] = "TWD";
     initDataValue(NMEA_TWD, TWDlabel, Anglefmt, TrueAngleunit, 0,
-                  NMEA_COMPASS_ANGLE_SIN);  // type: 0-360 angle with sin/cos 11
+                  NMEA_COMPASS_ANGLE_SIN);  // type: 0-360 mAngle with sin/cos 11
 
     static char TWSlabel[] = "TWS";
     initDataValue(NMEA_TWS, TWSlabel, WindSpeedfmt, Speedunit);
@@ -178,19 +179,19 @@ void Adafruit_GPS::data_init() {
     static char HEELlabel[] = "Heel";
     static char HEELunit[] = "Deg Stbd";
     initDataValue(NMEA_HEEL, HEELlabel, Anglefmt, HEELunit, 0,
-                  NMEA_BOAT_ANGLE);  // type: angle +/-180 2
+                  NMEA_BOAT_ANGLE);  // type: mAngle +/-180 2
 
     static char PITCHlabel[] = "Pitch";
     static char PITCHunit[] = "Deg Bow Up";
     initDataValue(NMEA_PITCH, PITCHlabel, Anglefmt, PITCHunit, 0,
-                  NMEA_BOAT_ANGLE);  // type: angle +/-180 2
+                  NMEA_BOAT_ANGLE);  // type: mAngle +/-180 2
     static char HDGlabel[] = "HDG";
     initDataValue(NMEA_HDG, HDGlabel, Anglefmt, MagAngleunit, 0,
-                  NMEA_COMPASS_ANGLE_SIN);  // type: 0-360 angle with sin/cos 11
+                  NMEA_COMPASS_ANGLE_SIN);  // type: 0-360 mAngle with sin/cos 11
 
     static char HDTlabel[] = "HDG";
     initDataValue(NMEA_HDT, HDTlabel, Anglefmt, TrueAngleunit, 0,
-                  NMEA_COMPASS_ANGLE_SIN);  // type: 0-360 angle with sin/cos 11
+                  NMEA_COMPASS_ANGLE_SIN);  // type: 0-360 mAngle with sin/cos 11
 
     static char VTWlabel[] = "VTW";
     initDataValue(NMEA_VTW, VTWlabel, BoatSpeedfmt, Speedunit);
@@ -275,7 +276,7 @@ void Adafruit_GPS::data_init() {
 
 /*!
     @brief Clearer approach to retrieving NMEA values by allowing calls that
-    look like nmea.get(NMEA_TWA) instead of val[NMEA_TWA].latest.
+    look like nmea.get(NMEA_TWA) instead of mVal[NMEA_TWA].latest.
     Use NewDataValue() to set the values.
     @param idx the NMEA value's index
     @return the latest NMEA value
@@ -283,7 +284,7 @@ void Adafruit_GPS::data_init() {
 
 nmea_float_t Adafruit_GPS::get(nmea_index_t idx) {
     if (idx >= NMEA_MAX_INDEX || idx < NMEA_HDOP) return 0.0;
-    return val[idx].latest;
+    return mVal[idx].latest;
 }
 
 /*!
@@ -294,7 +295,7 @@ nmea_float_t Adafruit_GPS::get(nmea_index_t idx) {
 
 nmea_float_t Adafruit_GPS::getSmoothed(nmea_index_t idx) {
     if (idx >= NMEA_MAX_INDEX || idx < NMEA_HDOP) return 0.0;
-    return val[idx].smoothed;
+    return mVal[idx].smoothed;
 }
 
 /*!
@@ -306,20 +307,20 @@ nmea_float_t Adafruit_GPS::getSmoothed(nmea_index_t idx) {
     @param response Time constant for smoothing in ms. The longer the time
     constant, the more slowly the smoothed value will move towards a new value.
     @param type The type of data contained in the value. simple float 0,
-    angle 0-360 1, angle +/-180 2, angle with history centered +/- around
-    the latest angle 3, lat/lon DDMM.mm 10, time HHMMSS 20.
+    mAngle 0-360 1, mAngle +/-180 2, mAngle with history centered +/- around
+    the latest mAngle 3, mLat/mLon DDMM.mm 10, time HHMMSS 20.
     @return none
 */
 
 void Adafruit_GPS::initDataValue(nmea_index_t idx, char *label, char *fmt, char *unit, unsigned long response,
                                  nmea_value_type_t type) {
     if (idx < NMEA_MAX_INDEX) {
-        if (label) val[idx].label = label;
-        if (fmt) val[idx].fmt = fmt;
-        if (unit) val[idx].unit = unit;
-        if (response) val[idx].response = response;
-        val[idx].type = type;
-        if ((int)(val[idx].type / 10) == 1) {        // angle with sin/cos component recording
+        if (label) mVal[idx].label = label;
+        if (fmt) mVal[idx].fmt = fmt;
+        if (unit) mVal[idx].unit = unit;
+        if (response) mVal[idx].response = response;
+        mVal[idx].type = type;
+        if ((int)(mVal[idx].type / 10) == 1) {       // mAngle with sin/cos component recording
             initDataValue((nmea_index_t)(idx + 1));  // initialize the next two data values as well
             initDataValue((nmea_index_t)(idx + 2));
         }
@@ -337,7 +338,7 @@ void Adafruit_GPS::initDataValue(nmea_index_t idx, char *label, char *fmt, char 
     @param idx The data index for the value to have history recorded
     @param scale Value for scaling the integer history list
     @param offset Value for scaling the integer history list
-    @param historyInterval Approximate Time in seconds between historical
+    @param historyInterval Approximate Time in mSeconds between historical
    values.
     @param historyN Set size of data buffer.
     @return pointer to the history
@@ -348,25 +349,25 @@ nmea_history_t *Adafruit_GPS::initHistory(nmea_index_t idx, nmea_float_t scale, 
     historyN = max((unsigned)10, historyN);
     if (idx < NMEA_MAX_INDEX) {
         // remove any existing history
-        if (val[idx].hist != NULL) removeHistory(idx);
+        if (mVal[idx].hist != NULL) removeHistory(idx);
         // space for the struct
-        val[idx].hist = (nmea_history_t *)malloc(sizeof(nmea_history_t));
-        if (val[idx].hist != NULL) {
+        mVal[idx].hist = (nmea_history_t *)malloc(sizeof(nmea_history_t));
+        if (mVal[idx].hist != NULL) {
             // space for the data array of the appropriate size
-            val[idx].hist->data = (int16_t *)malloc(sizeof(int16_t) * historyN);
-            if (val[idx].hist->data != NULL) {
+            mVal[idx].hist->data = (int16_t *)malloc(sizeof(int16_t) * historyN);
+            if (mVal[idx].hist->data != NULL) {
                 // initialize the data array
-                for (unsigned i = 0; i < historyN; i++) val[idx].hist->data[i] = 0;
+                for (unsigned i = 0; i < historyN; i++) mVal[idx].hist->data[i] = 0;
             } else
-                free(val[idx].hist);
+                free(mVal[idx].hist);
         }
-        if (val[idx].hist != NULL) {
-            val[idx].hist->n = historyN;
-            if (scale > 0.0f) val[idx].hist->scale = scale;
-            val[idx].hist->offset = offset;
-            if (historyInterval > 0) val[idx].hist->historyInterval = historyInterval;
+        if (mVal[idx].hist != NULL) {
+            mVal[idx].hist->n = historyN;
+            if (scale > 0.0f) mVal[idx].hist->scale = scale;
+            mVal[idx].hist->offset = offset;
+            if (historyInterval > 0) mVal[idx].hist->historyInterval = historyInterval;
         }
-        return val[idx].hist;
+        return mVal[idx].hist;
     }
     return NULL;
 }
@@ -379,10 +380,10 @@ nmea_history_t *Adafruit_GPS::initHistory(nmea_index_t idx, nmea_float_t scale, 
 
 void Adafruit_GPS::removeHistory(nmea_index_t idx) {
     if (idx < NMEA_MAX_INDEX) {
-        if (val[idx].hist == NULL) return;
-        free(val[idx].hist->data);
-        free(val[idx].hist);
-        val[idx].hist = NULL;
+        if (mVal[idx].hist == NULL) return;
+        free(mVal[idx].hist->data);
+        free(mVal[idx].hist);
+        mVal[idx].hist = NULL;
     }
 }
 
@@ -394,111 +395,56 @@ void Adafruit_GPS::removeHistory(nmea_index_t idx) {
     @return none
 */
 
-#if 0
-void Adafruit_GPS::showDataValue(nmea_index_t idx, int n) {
-  Serial.print("idx: ");
-  if (idx < 10)
-    Serial.print(" ");
-  Serial.print(idx);
-  Serial.print(", ");
-  Serial.print(val[idx].label);
-  Serial.print(", ");
-  Serial.print(val[idx].latest, 4);
-  Serial.print(", ");
-  Serial.print(val[idx].smoothed, 4);
-  Serial.print(", at ");
-  Serial.print(val[idx].lastUpdate);
-  Serial.print(" ms, tau = ");
-  Serial.print(val[idx].response);
-  Serial.print(" ms, type:");
-  Serial.print(val[idx].type);
-  Serial.print(",  ockam:");
-  Serial.print(val[idx].ockam);
-  if (val[idx].hist) {
-    Serial.print("\n     History at ");
-    Serial.print(val[idx].hist->historyInterval);
-    Serial.print(" second intervals:  ");
-    Serial.print(val[idx].hist->data[val[idx].hist->n - 1]);
-    for (unsigned i = val[idx].hist->n - 2;
-         i >= max(val[idx].hist->n - n, (unsigned)0);
-         i--) { // most recent first
-      Serial.print(", ");
-      Serial.print(val[idx].hist->data[i]);
-    }
-  }
-  Serial.print("\n");
-  if (idx == NMEA_LAT) {
-    Serial.print("     latitude (DDMM.mmmm): ");
-    Serial.print(latitude, 4);
-    Serial.print(", lat: ");
-    Serial.print(lat);
-    Serial.print(", latitudeDegrees: ");
-    Serial.print(latitudeDegrees, 8);
-    Serial.print(", latitude_fixed: ");
-    Serial.println(latitude_fixed);
-  }
-  if (idx == NMEA_LON) {
-    Serial.print("     longitude (DDMM.mmmm): ");
-    Serial.print(longitude, 4);
-    Serial.print(", lon: ");
-    Serial.print(lon);
-    Serial.print(", longitudeDegrees: ");
-    Serial.print(longitudeDegrees, 8);
-    Serial.print(", longitude_fixed: ");
-    Serial.println(longitude_fixed);
-  }
-}
-#endif
 void Adafruit_GPS::showDataValue(nmea_index_t idx, int n) {
     printf("idx: ");
     if (idx < 10) printf(" ");
-    printf("%d, %s, %.4f, %.4f, at %lu ms, tau = %lu ms, type: %d, ockam: %d\n", idx, val[idx].label, val[idx].latest,
-           val[idx].smoothed, val[idx].lastUpdate, val[idx].response, val[idx].type, val[idx].ockam);
-    if (val[idx].hist) {
-        printf("     History at %lu second intervals:  %f", val[idx].hist->historyInterval,
-               val[idx].hist->data[val[idx].hist->n - 1]);
-        for (unsigned i = val[idx].hist->n - 2; i >= max(val[idx].hist->n - n, (unsigned)0);
+    printf("%d, %s, %.4f, %.4f, at %lu ms, tau = %lu ms, type: %d, ockam: %d\n", idx, mVal[idx].label, mVal[idx].latest,
+           mVal[idx].smoothed, mVal[idx].mLastUpdate, mVal[idx].response, mVal[idx].type, mVal[idx].ockam);
+    if (mVal[idx].hist) {
+        printf("     History at %lu second intervals:  %f", mVal[idx].hist->historyInterval,
+               mVal[idx].hist->data[mVal[idx].hist->n - 1]);
+        for (unsigned i = mVal[idx].hist->n - 2; i >= max(mVal[idx].hist->n - n, (unsigned)0);
              i--) {  // most recent first
-            printf(", %f", val[idx].hist->data[i]);
+            printf(", %f", mVal[idx].hist->data[i]);
         }
         printf("\n");
     }
     if (idx == NMEA_LAT) {
-        printf("     latitude (DDMM.mmmm): %.4f, lat: %c, latitudeDegrees: %.8f, latitude_fixed: %ld\n", latitude, lat,
-               latitudeDegrees, latitude_fixed);
+        printf("     mLatitude (DDMM.mmmm): %.4f, mLat: %c, mLatitudeDegrees: %.8f, mLatitude_fixed: %ld\n", mLatitude,
+               mLat, mLatitudeDegrees, mLatitude_fixed);
     }
     if (idx == NMEA_LON) {
-        printf("     longitude (DDMM.mmmm): %.4f, lon: %c, longitudeDegrees: %.8f, longitude_fixed: %ld\n", longitude,
-               lon, longitudeDegrees, longitude_fixed);
+        printf("     mLongitude (DDMM.mmmm): %.4f, mLon: %c, mLongitudeDegrees: %.8f, mLongitude_fixed: %ld\n",
+               mLongitude, mLon, mLongitudeDegrees, mLongitude_fixed);
     }
 }
 
 /*!
-    @brief Check if it is a compound angle
+    @brief Check if it is a compound mAngle
     @param idx The index for the data value
-    @return true if a compound angle requiring 3 contiguos data values.
+    @return true if a compound mAngle requiring 3 contiguos data values.
 */
 
 bool Adafruit_GPS::isCompoundAngle(nmea_index_t idx) {
-    if ((int)(val[idx].type / 10) == 1)  // angle with sin/cos component recording
+    if ((int)(mVal[idx].type / 10) == 1)  // mAngle with sin/cos component recording
         return true;
     return false;
 }
 
 /*!
     @brief Estimate a direction in -180 to 180 degree range from the values
-    of the sine and cosine of the compound angle, which could be noisy.
-    @param s The sin of the angle
-    @param c The cosine of the angle
-    @return The angle in -180 to 180 degree range.
+    of the sine and cosine of the compound mAngle, which could be noisy.
+    @param s The sin of the mAngle
+    @param c The cosine of the mAngle
+    @return The mAngle in -180 to 180 degree range.
 */
 
 nmea_float_t Adafruit_GPS::boatAngle(nmea_float_t s, nmea_float_t c) {
-    // put the sin angle in -90 to 90 range
+    // put the sin mAngle in -90 to 90 range
     nmea_float_t sAng = asin(s) * (nmea_float_t)RAD_TO_DEG;
     while (sAng < -90) sAng += 180.0f;
     while (sAng > 90) sAng -= 180.0f;
-    // put the cos angle in 0 to 180 range
+    // put the cos mAngle in 0 to 180 range
     nmea_float_t cAng = acos(c) * (nmea_float_t)RAD_TO_DEG;
     while (cAng < 0) cAng += 180.0f;
     while (cAng > 180) cAng -= 180.0f;
@@ -523,10 +469,10 @@ nmea_float_t Adafruit_GPS::boatAngle(nmea_float_t s, nmea_float_t c) {
 
 /*!
     @brief Estimate a direction in 0 to 360 degree range from the values
-    of the sine and cosine of the compound angle, which could be noisy.
-    @param s The sin of the angle
-    @param c The cosine of the angle
-    @return The angle in 0 to 360 degree range.
+    of the sine and cosine of the compound mAngle, which could be noisy.
+    @param s The sin of the mAngle
+    @param c The cosine of the mAngle
+    @return The mAngle in 0 to 360 degree range.
 */
 
 nmea_float_t Adafruit_GPS::compassAngle(nmea_float_t s, nmea_float_t c) {
