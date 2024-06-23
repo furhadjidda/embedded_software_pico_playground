@@ -94,6 +94,7 @@ jobs:
     - name: Configure CMake and Build
       run: |
         mkdir -p build_host
+        cd build_host
         cmake -DBUILD_FOR_HOST=ON ..
         make -j8
 
