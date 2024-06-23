@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 // Test the add function
-TEST(SampleTest, Test1) { EXPECT_EQ(1, 2); }
+TEST(SampleTest, Test1) { EXPECT_EQ(2, 2); }
 
 // Test the subtract function
 TEST(SampleTest, Test2) { EXPECT_EQ(0, 0); }

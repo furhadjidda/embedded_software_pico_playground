@@ -9,7 +9,8 @@ on:
       - main
 
 jobs:
-  build:
+  build_target:
+    name: Build for Target
     runs-on: ubuntu-latest
 
     steps:
@@ -60,7 +61,43 @@ jobs:
         cd build
         cmake --build . -j8
 
+  build_host:
+    name: Build for Host
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        #submodules: recursive  # Initialize and update submodules
+        fetch-depth: 1
+
+    - name: Initialize submodules
+      run: |
+        git submodule update --init --recursive --depth 1
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'  # Set your preferred Python version
+
+    - name: Set up environment
+      run: |
+        # Set up any necessary environment variables here
+        echo "Setting up environment"
+        export MY_ENV_VAR=value
+        # Add other environment setup commands as needed
+
+    - name: Install dependencies
+      run: sudo apt-get install -y g++ gcc
+
+    - name: Configure CMake and Build
+      run: |
+        mkdir -p build_host
+        cmake -DBUILD_FOR_HOST=ON ..
+        cmake ..
+
     - name: Run tests
       run: |
-        cd build
+        cd build_host
         ctest --output-on-failure
