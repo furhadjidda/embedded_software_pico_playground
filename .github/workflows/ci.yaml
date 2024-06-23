@@ -95,7 +95,7 @@ jobs:
       run: |
         mkdir -p build_host
         cmake -DBUILD_FOR_HOST=ON ..
-        cmake ..
+        make -j8
 
     - name: Run tests
       run: |
