@@ -1,21 +1,26 @@
 cmake_minimum_required(VERSION 3.14)
 
-set(PROJECT_NAME "Embedded_Software_Pico_Playground")
+set(PROJECT_NAME "pico_playground")
 set(BUILD_NUMBER "1")
 
 # Define an option to build for the host platform
 option(BUILD_FOR_HOST "Build for the host platform" OFF)
 
+### --------------------- HOST BUILD -------------------------------------------------
 if (BUILD_FOR_HOST)
     message(STATUS "Configuring for host platform")
 
     # Specify the C++ compiler
     set(CMAKE_CXX_COMPILER "/usr/bin/g++")
     set(CMAKE_C_COMPILER "/usr/bin/gcc")
-
+    add_compile_definitions(BUILD_FOR_HOST)
     # Set compiler flags for host build
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
+
+    enable_testing()
+    # Common source code directory
+    set(COMMON_CODE_DIRECTORY "${CMAKE_SOURCE_DIR}/src/common")
 
     # Name the project
     project(${PROJECT_NAME}
@@ -25,25 +30,16 @@ if (BUILD_FOR_HOST)
 
     # Path to Google Test
     set(GTEST_ROOT "${CMAKE_SOURCE_DIR}/external/googletest")
+    set(TESTS_ROOT "${CMAKE_SOURCE_DIR}/tests")
+    set(GPS_LIBRARY "${CMAKE_SOURCE_DIR}/lib/adafruit_gps")
+    set(MOCKS_PATH "${CMAKE_SOURCE_DIR}/tests/mocks")
     add_subdirectory(${GTEST_ROOT})
+    add_subdirectory(${TESTS_ROOT})
+    add_subdirectory(${GPS_LIBRARY})
 
-    # Enable testing
-    enable_testing()
-
-    # Add a simple test executable
-    add_executable(${PROJECT_NAME}_tests tests/test.cpp)
-
-    # Link test libraries
-    target_link_libraries(${PROJECT_NAME}_tests
-        gtest
-        gtest_main
-    )
-
-    # Add tests
-    add_test(NAME ${PROJECT_NAME}_tests COMMAND ${PROJECT_NAME}_tests)
 
     message(STATUS "Configuring for host platform complete !!")
-else()
+else()### --------------------- TARGET BUILD -------------------------------------------------
     message(STATUS "Configuring for target platform")
 
     # Set the Pico board to use

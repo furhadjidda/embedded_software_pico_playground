@@ -1,4 +1,3 @@
-
 /*
  *   This file is part of embedded software pico playground project.
  *
@@ -15,40 +14,17 @@
  *   You should have received a copy of the GNU General Public License v3.0
  *   along with embedded software pico playground project.  If not, see <https://www.gnu.org/licenses/>.
  */
+#ifndef MOCK_I2C_H
+#define MOCK_I2C_H
 
-#ifndef UTILS_HEADER
-#define UTILS_HEADER
+#include <stdint.h>
 
-#include <algorithm>
-#include <cstdint>
-#include <cstdlib>
-#include <cstring>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <vector>
-// Pico SDK
-#ifndef BUILD_FOR_HOST
-#include "pico/binary_info.h"
-#include "pico/stdlib.h"
-#endif
+typedef struct {
+    int placeholder;  // Add necessary fields for the mock
+} mock_i2c_inst_t;
 
-using std::string;
-using std::vector;
+// Mock function prototypes
+int mock_i2c_read_blocking(mock_i2c_inst_t *i2c, uint8_t addr, uint8_t *dst, uint8_t len, bool nostop);
+int mock_i2c_write_blocking(mock_i2c_inst_t *i2c, uint8_t addr, const uint8_t *src, uint8_t len, bool nostop);
 
-/*
- * PROTOTYPES
- */
-namespace Utils {
-vector<string> split_to_lines(string str, string sep = "\r\n");
-string split_msg(string msg, uint32_t want_line);
-string get_sms_number(string line);
-string get_field_value(string line, uint32_t field_number);
-string uppercase(string base);
-uint32_t bcd(uint32_t base);
-void log_device_info(void);
-void log_debug(const string msg);
-}  // namespace Utils
-
-#endif  // UTILS_HEADER
+#endif  // MOCK_I2C_H

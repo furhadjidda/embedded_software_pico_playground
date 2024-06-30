@@ -20,8 +20,17 @@
 
 #include <ctype.h>
 #include <stdlib.h>
+#ifndef BUILD_FOR_HOST
+#include <stdio.h>
 
 #include "pico/stdlib.h"
+#else
+#include <stdint.h>
+
+#include <cstdio>
+
+#include "mock_hardware.hpp"
+#endif
 
 typedef uint8_t byte;
 

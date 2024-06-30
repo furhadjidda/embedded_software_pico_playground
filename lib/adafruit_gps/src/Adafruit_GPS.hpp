@@ -35,8 +35,10 @@
 #include <Adafruit_PMTK.hpp>
 #include <NMEA_data.hpp>
 
-#include "hardware/i2c.h"
+#include "i2c_wrapper.hpp"
+#ifndef BUILD_FOR_HOST
 #include "pico/stdlib.h"
+#endif
 
 #define NMEA_EXTENSIONS
 

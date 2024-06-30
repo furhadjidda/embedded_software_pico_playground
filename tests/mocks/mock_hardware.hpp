@@ -1,4 +1,3 @@
-
 /*
  *   This file is part of embedded software pico playground project.
  *
@@ -16,39 +15,31 @@
  *   along with embedded software pico playground project.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef UTILS_HEADER
-#define UTILS_HEADER
+#ifndef MOCK_HARDWARE_H
+#define MOCK_HARDWARE_H
 
-#include <algorithm>
 #include <cstdint>
-#include <cstdlib>
-#include <cstring>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <vector>
-// Pico SDK
-#ifndef BUILD_FOR_HOST
-#include "pico/binary_info.h"
-#include "pico/stdlib.h"
-#endif
 
-using std::string;
-using std::vector;
+#include "mock_i2c.hpp"
+typedef mock_i2c_inst_t i2c_inst_t;
 
-/*
- * PROTOTYPES
- */
-namespace Utils {
-vector<string> split_to_lines(string str, string sep = "\r\n");
-string split_msg(string msg, uint32_t want_line);
-string get_sms_number(string line);
-string get_field_value(string line, uint32_t field_number);
-string uppercase(string base);
-uint32_t bcd(uint32_t base);
-void log_device_info(void);
-void log_debug(const string msg);
-}  // namespace Utils
+inline void i2c_init(i2c_inst_t* i2c, uint32_t baudrate) {
+    // Mock implementation
+}
 
-#endif  // UTILS_HEADER
+inline void gpio_set_function(uint pin, int function) {
+    // Mock implementation
+}
+
+inline void gpio_pull_up(uint pin) {
+    // Mock implementation
+}
+
+inline uint64_t time_us_64() {
+    // Mock implementation
+    return 0;
+}
+
+#define GPIO_FUNC_I2C 4  // Mock definition for GPIO function I2C
+
+#endif  // MOCK_HARDWARE_H
