@@ -137,7 +137,6 @@ bool Adafruit_GPS::Parse(char *nmea) {
         parseFix(p);  // skip the rest
 
     } else if (!strcmp(thisSentence, "GSA")) {  //*****************************GSA
-        printf(">> GSA\n");
         // in Adafruit from Actisense NGW-1
         p = strchr(p, ',') + 1;  // skip selection mode
         if (!isEmpty(p)) mFixquality_3d = atoi(p);
@@ -460,7 +459,7 @@ bool Adafruit_GPS::Parse(char *nmea) {
 #endif  // NMEA_EXTENSIONS
 
     else {
-        printf("PARSE_ERROR: Didn't find the required sentence definition \n");
+        // printf("PARSE_ERROR: Didn't find the required sentence definition \n");
         return false;  // didn't find the required sentence definition
     }
 
@@ -482,7 +481,7 @@ bool Adafruit_GPS::Check(char *nmea) {
     thisCheck = 0;  // new Check
     *thisSentence = *thisSource = 0;
     if (*nmea != '$' && *nmea != '!') {
-        printf("PARSE_ERROR: (*nmea != '$' && *nmea != '!') failed\n");
+        // printf("PARSE_ERROR: (*nmea != '$' && *nmea != '!') failed\n");
         return false;  // doesn't start with $ or !
     } else
         thisCheck += NMEA_HAS_DOLLAR;
@@ -492,7 +491,7 @@ bool Adafruit_GPS::Check(char *nmea) {
     while (*ast) ast++;                       // go to the end
     while (*ast != '*' && ast > nmea) ast--;  // then back to * if it's there
     if (*ast != '*') {
-        printf("PARSE_ERROR: (*ast != '*') failed\n");
+        // printf("PARSE_ERROR: (*ast != '*') failed\n");
         return false;  // there is no asterisk
     } else {
         uint16_t sum = ParseHex(*(ast + 1)) * 16;  // extract checksum
@@ -500,7 +499,7 @@ bool Adafruit_GPS::Check(char *nmea) {
         char *p = nmea;  // Check checksum
         for (char *p1 = p + 1; p1 < ast; p1++) sum ^= *p1;
         if (sum != 0) {
-            printf("PARSE_ERROR: Bad Checksum\n");
+            // printf("PARSE_ERROR: Bad Checksum\n");
             return false;  // bad checksum :(
         } else
             thisCheck += NMEA_HAS_CHECKSUM;
@@ -512,7 +511,7 @@ bool Adafruit_GPS::Check(char *nmea) {
         strcpy(thisSource, src);
         thisCheck += NMEA_HAS_SOURCE;
     } else {
-        printf("PARSE_ERROR: src check failed\n");
+        // printf("PARSE_ERROR: src check failed\n");
         return false;
     }
     p += strlen(src);
@@ -529,7 +528,7 @@ bool Adafruit_GPS::Check(char *nmea) {
             return false;  // known but not parsed
         } else {
             parseStr(thisSentence, p, NMEA_MAX_SENTENCE_ID);
-            printf("PARSE_ERROR:  snc check failed\n");
+            // printf("PARSE_ERROR:  snc check failed\n");
             return false;  // unknown
         }
     }
