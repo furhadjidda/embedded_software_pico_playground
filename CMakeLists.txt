@@ -55,7 +55,7 @@ else()### --------------------- TARGET BUILD -----------------------------------
     set(MICROROS_ROOT "${CMAKE_SOURCE_DIR}/external/micro_ros_raspberrypi_pico_sdk")
     set(PCA9685_CORE_TEST "${CMAKE_SOURCE_DIR}/lib/pca9685_motor_control")
     set(GPS_LIBRARY "${CMAKE_SOURCE_DIR}/lib/adafruit_gps")
-    #set(PICO_EXAMPLES "${CMAKE_SOURCE_DIR}/external/pico-examples")
+    set(PICO_EXAMPLES "${CMAKE_SOURCE_DIR}/external/pico-examples")
 
     # Common source code directory
     set(COMMON_CODE_DIRECTORY "${CMAKE_SOURCE_DIR}/src/common")
