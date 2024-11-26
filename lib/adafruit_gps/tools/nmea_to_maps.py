@@ -1,4 +1,4 @@
-import sys
+import sys, os
 from PyQt5.QtWidgets import QApplication, QWidget, QFileDialog, QVBoxLayout, QPushButton, QLabel
 from pykml.factory import KML_ElementMaker as KML
 from lxml import etree
@@ -120,7 +120,11 @@ class NMEAParserApp(QWidget):
                 self.label.setText("No valid coordinates found in the NMEA file.")
                 return
 
-            output_kml = "output.kml"
+            #output_kml = "output.kml"
+            # Generate output file name based on input file name
+            input_file_name = os.path.basename(self.file_path)
+            base_name, _ = os.path.splitext(input_file_name)
+            output_kml = f"{base_name}.kml"
             create_kml(coordinates, output_kml)
             self.label.setText(f"KML file generated: {output_kml}")
         else:
