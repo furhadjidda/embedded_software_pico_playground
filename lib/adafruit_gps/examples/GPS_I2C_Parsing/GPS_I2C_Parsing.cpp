@@ -23,7 +23,8 @@ void setup() {
     GPS.Init(0x10);  // The I2C address to use is 0x10
     // uncomment this line to turn on RMC (recommended minimum) and GGA (mFix
     // data) including mAltitude
-    GPS.SendCommand(reinterpret_cast<const uint8_t*>(PMTK_SET_NMEA_OUTPUT_RMCGGA), strlen(PMTK_SET_NMEA_OUTPUT_RMCGGA));
+    GPS.SendCommand(reinterpret_cast<const uint8_t*>(PMTK_SET_NMEA_OUTPUT_ALLDATA),
+                    strlen(PMTK_SET_NMEA_OUTPUT_ALLDATA));
     // uncomment this line to turn on only the "minimum recommended" data
     // GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);
     // For parsing data, we don't suggest using anything but either RMC only or
