@@ -10,6 +10,7 @@
 [submodule "micro_ros_raspberrypi_pico_sdk"]
 	path = external/micro_ros_raspberrypi_pico_sdk
 	url = https://github.com/micro-ROS/micro_ros_raspberrypi_pico_sdk.git
+	branch = humble
 [submodule "external/pico-extras"]
 	path = external/pico-extras
 	url = https://github.com/raspberrypi/pico-extras.git

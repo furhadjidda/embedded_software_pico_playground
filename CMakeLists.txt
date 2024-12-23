@@ -51,6 +51,7 @@ else()### --------------------- TARGET BUILD -----------------------------------
 
     # Specify the app(s) source code directories
     set(FREERTOS_TIMER_APP_SRC_DIRECTORY "${CMAKE_SOURCE_DIR}/src/freertos_timer_app")
+    set(FREERTOS_TIMER_APP_SRC_DIRECTORY "${CMAKE_SOURCE_DIR}/src/microros_app")
     set(PIMORONI_ROOT "${CMAKE_SOURCE_DIR}/external/pimoroni-pico")
     set(MICROROS_ROOT "${CMAKE_SOURCE_DIR}/external/micro_ros_raspberrypi_pico_sdk")
     set(PCA9685_CORE_TEST "${CMAKE_SOURCE_DIR}/lib/pca9685_motor_control")
